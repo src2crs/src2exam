@@ -1,1 +1,5 @@
+# Output directories for PDFs.
+build
+
+# Mac Stuff
 .DS_Store
