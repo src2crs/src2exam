@@ -1,0 +1,3 @@
+[submodule "submodules/latex-buildsystem"]
+	path = submodules/latex-buildsystem
+	url = https://github.com/src2crs/latex-buildsystem
