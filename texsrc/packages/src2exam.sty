@@ -2,6 +2,8 @@
 \ProvidesPackage{src2exam}[2023/11/25 v0.0.1 Src2Exam]
 
 \RequirePackage{etoolbox}
+\RequirePackage{scrlayer-scrpage}
+\RequirePackage{tabularx}
 
 \ExplSyntaxOn
 
@@ -43,6 +45,54 @@
 }
 \NewDocumentCommand{\ifsolutionsF}{ m }{
     \iftoggle{src2exam@solutions}{}{#1}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Front Matter                                                                         %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Macros for exam title, course etc.
+\NewDocumentCommand{\course}{ m }{\csdef{src2exam@course}{#1}}
+\NewDocumentCommand{\examdate}{ m }{\csdef{src2exam@examdate}{#1}}
+\NewDocumentCommand{\examtitle}{ m }{\csdef{src2exam@examtitle}{#1}}
+\NewDocumentCommand{\examtype}{ m }{\csdef{src2exam@examtype}{#1}}
+\NewDocumentCommand{\lecture}{ m }{\csdef{src2exam@lecture}{#1}}
+\NewDocumentCommand{\lecturer}{ m }{\csdef{src2exam@lecturer}{#1}}
+\NewDocumentCommand{\semester}{ m }{\csdef{src2exam@semester}{#1}}
+
+\csdef{src2exam@chead}{
+    \csuse{src2exam@lecture}
+    % Add dash if both lecture and exam type are set.
+    \ifcsdef{src2exam@examtype}{\ifcsdef{src2exam@lecture}{~--~}{}}{}
+    \csuse{src2exam@examtype}
+}
+
+% Default exam title, can be overridden by using \examtitle in the preamble.
+\examtitle{\csuse{src2exam@chead}}
+
+% Cover page.
+% TODO: Refine
+\NewDocumentCommand{\coverpage}{}{
+    \begin{titlepage}
+        \centering
+        {\huge\textbf{\csuse{src2exam@examtitle}}}
+        \vspace*{0.5cm}
+        \hrule
+        \vspace*{0.5cm}
+        \begin{tabularx}{\textwidth}{lXlX}
+            \textbf{Course} & \csuse{src2exam@course} &
+            \textbf{Semester} & \csuse{src2exam@semester} \\
+            \textbf{Date} & \csuse{src2exam@examdate} &
+            \textbf{Lecturer} & \csuse{src2exam@lecturer} \\
+        \end{tabularx}
+    \end{titlepage}
+}
+
+% Set up front matter.
+\AtBeginDocument{
+    \ihead{\csuse{src2exam@course}}
+    \chead{\csuse{src2exam@chead}}
+    \ohead{\csuse{src2exam@semester}}
 }
 
 \ExplSyntaxOff
