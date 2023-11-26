@@ -5,9 +5,19 @@
 
 \ExplSyntaxOn
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Commands and environments for solutions. %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Package Options                                                                      %
+%                                                                                      %
+% Options are defined here for readability, but they are processed at the end.         %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Solutions
+\DeclareOption{enablesolutions}{\enablesolutions}
+\DeclareOption{disablesolutions}{\disablesolutions}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Commands and environments for solutions.                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Toggle for solutions and commands to control them.
 \newtoggle{src2exam@solutions}
@@ -16,7 +26,9 @@
         {on}{\toggletrue{src2exam@solutions}}
         {off}{\togglefalse{src2exam@solutions}}
     }{
-        \PackageError{src2exam}{Invalid~option~'#1'~for~\string\setsolutions.~Must~be~'on'~or~'off'.}{}
+        \PackageError{src2exam}{
+            Invalid~option~'#1'~for~\string\setsolutions.~Must~be~'on'~or~'off'.
+        }{}
     }
 }
 \NewDocumentCommand{\enablesolutions}{}{\setsolutions{on}}
@@ -33,14 +45,12 @@
     \iftoggle{src2exam@solutions}{}{#1}
 }
 
-% package options
+\ExplSyntaxOff
 
-% Option to switch solutions on and off.
-% Default: off
-\DeclareOption{enablesolutions}{\enablesolutions}
-\DeclareOption{disablesolutions}{\disablesolutions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Set Defaults and Process Package Options                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \ExecuteOptions{disablesolutions}
 
 \ProcessOptions\relax
-
-\ExplSyntaxOff
