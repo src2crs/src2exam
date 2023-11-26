@@ -4,6 +4,8 @@
 \RequirePackage{etoolbox}
 \RequirePackage{scrlayer-scrpage}
 \RequirePackage{tabularx}
+\RequirePackage{tcolorbox}
+\tcbuselibrary{skins}
 
 \ExplSyntaxOn
 
@@ -115,14 +117,26 @@
 % Counter for tasks.
 \newcounter{src2exam@task}
 
-% Assembles a task header.
+% TColorBox for a task header.
+\tcbset{taskheader/.style={
+    enhanced,
+    colback=black!5!white,
+    colframe=black!75!white,
+    boxrule=0.25pt,
+    %sharp corners, % TODO: why doesn't this work?
+    arc=0pt,outer arc=0pt, % workaround
+}}
+
+% Typesets a task header.
 \NewDocumentCommand{\taskheader}{
     o % points, typeset as [points]
     o % description
 }{
-    \textbf{\csuse{src2exam@string@task}~\arabic{src2exam@task}}
-    \IfValueT{#2}{~\textbf{(#2)}}
-    \IfValueT{#1}{\hfill\textbf{[#1~\csuse{pointsstring}[#1]]}}
+    \begin{tcolorbox}[taskheader]
+        \textbf{\csuse{src2exam@string@task}~\arabic{src2exam@task}}
+        \IfValueT{#2}{~\textbf{(#2)}}
+        \IfValueT{#1}{\hfill\textbf{[#1~\csuse{pointsstring}[#1]]}}
+    \end{tcolorbox}
 }
 
 % Starts a task.
