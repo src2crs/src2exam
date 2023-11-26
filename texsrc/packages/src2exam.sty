@@ -6,6 +6,8 @@
 \RequirePackage{tabularx}
 \RequirePackage{tcolorbox}
 \tcbuselibrary{skins}
+\RequirePackage{todonotes}
+
 
 \ExplSyntaxOn
 
@@ -39,6 +41,7 @@
     \csdef{src2exam@string@points}{Punkte}
     \csdef{src2exam@string@task}{Aufgabe}
     \csdef{src2exam@string@tasks}{Aufgaben}
+    \csdef{src2exam@string@missing}{fehlt}
 }
 
 \csdef{src2exam@selectlanguage:en}{
@@ -54,6 +57,7 @@
     \csdef{src2exam@string@points}{Points}
     \csdef{src2exam@string@task}{Task}
     \csdef{src2exam@string@tasks}{Tasks}
+    \csdef{src2exam@string@missing}{missing}
 }
 
 \NewDocumentCommand{\examlanguage}{ m }{
@@ -68,7 +72,7 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Helper commands to manage singular and plural.                                       %
+% Helper commands                                                                      %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Singular/plural for points.
@@ -78,6 +82,23 @@
     \IfValueTF{#1}{
         \int_compare:nTF{#1 = 1}{\csuse{src2exam@string@point}}{\csuse{src2exam@string@points}}
     }{}
+}
+
+% Mark a missing task.
+\NewDocumentCommand{\taskmissing}{}{
+    \todo[inline]{\csuse{src2exam@string@task}~\arabic{src2exam@task}~\csuse{src2exam@string@missing}}
+}
+
+% Mark a missing solution.
+\NewDocumentCommand{\solutionmissing}{}{
+    \todo[inline]{\csuse{src2exam@string@solution}~\arabic{src2exam@task}~\csuse{src2exam@string@missing}}
+}
+
+% Show list of todos on a separate page.
+\NewDocumentCommand{\showlistoftodos}{}{
+    \newpage
+    \listoftodos
+    \newpage
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
