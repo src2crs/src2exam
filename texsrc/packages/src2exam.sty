@@ -1,2 +1,46 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{src2exam}[2023/11/25 v0.0.1 Src2Exam]
+
+\RequirePackage{etoolbox}
+
+\ExplSyntaxOn
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Commands and environments for solutions. %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Toggle for solutions and commands to control them.
+\newtoggle{src2exam@solutions}
+\NewDocumentCommand{\setsolutions}{ m }{
+    \str_case:nnF{#1}{
+        {on}{\toggletrue{src2exam@solutions}}
+        {off}{\togglefalse{src2exam@solutions}}
+    }{
+        \PackageError{src2exam}{Invalid~option~'#1'~for~\string\setsolutions.~Must~be~'on'~or~'off'.}{}
+    }
+}
+\NewDocumentCommand{\enablesolutions}{}{\setsolutions{on}}
+\NewDocumentCommand{\disablesolutions}{}{\setsolutions{off}}
+
+% Conditionals for solutions.
+\NewDocumentCommand{\ifsolutionsTF}{ m m }{
+    \iftoggle{src2exam@solutions}{#1}{#2}
+}
+\NewDocumentCommand{\ifsolutionsT}{ m }{
+    \iftoggle{src2exam@solutions}{#1}{}
+}
+\NewDocumentCommand{\ifsolutionsF}{ m }{
+    \iftoggle{src2exam@solutions}{}{#1}
+}
+
+% package options
+
+% Option to switch solutions on and off.
+% Default: off
+\DeclareOption{enablesolutions}{\enablesolutions}
+\DeclareOption{disablesolutions}{\disablesolutions}
+\ExecuteOptions{disablesolutions}
+
+\ProcessOptions\relax
+
+\ExplSyntaxOff
