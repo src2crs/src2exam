@@ -17,6 +17,46 @@
 \DeclareOption{enablesolutions}{\enablesolutions}
 \DeclareOption{disablesolutions}{\disablesolutions}
 
+% Language
+\DeclareOption{de}{\examlanguage{de}}
+\DeclareOption{en}{\examlanguage{en}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Commands for using a language                                                        %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\csdef{src2crs@selectlanguage:de}{
+    \csdef{src2crs@string@exam}{Klausur}
+    \csdef{src2crs@string@solution}{Lösung}
+    \csdef{src2crs@string@solutions}{Lösungen}
+    \csdef{src2crs@string@lecture}{Vorlesung}
+    \csdef{src2crs@string@course}{Kurs}
+    \csdef{src2crs@string@date}{Datum}
+    \csdef{src2crs@string@lecturer}{Dozent}
+    \csdef{src2crs@string@semester}{Semester}
+}
+
+\csdef{src2crs@selectlanguage:en}{
+    \csdef{src2crs@string@exam}{Exam}
+    \csdef{src2crs@string@solution}{Solution}
+    \csdef{src2crs@string@solutions}{Solutions}
+    \csdef{src2crs@string@lecture}{Lecture}
+    \csdef{src2crs@string@course}{Course}
+    \csdef{src2crs@string@date}{Date}
+    \csdef{src2crs@string@lecturer}{Lecturer}
+    \csdef{src2crs@string@semester}{Semester}
+}
+
+\NewDocumentCommand{\examlanguage}{ m }{
+    \str_case:nnF{#1}{
+        {de}{\csuse{src2crs@selectlanguage:de}}
+        {en}{\csuse{src2crs@selectlanguage:en}}
+    }{
+        \PackageError{src2exam}{
+            Invalid~option~'#1'~for~\string\examlanguage.~Must~be~'de'~or~'en'.
+        }{}
+    }
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Commands and environments for solutions.                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -75,15 +115,19 @@
 \NewDocumentCommand{\coverpage}{}{
     \begin{titlepage}
         \centering
-        {\huge\textbf{\csuse{src2exam@examtitle}}}
+        {\huge\textbf{\csuse{src2exam@examtitle}}} \\
+        \ifsolutionsT{%
+            \vspace*{0.5cm}
+            {\Large\textbf{\csuse{src2crs@string@solutions}}}
+        }
         \vspace*{0.5cm}
         \hrule
         \vspace*{0.5cm}
         \begin{tabularx}{\textwidth}{lXlX}
-            \textbf{Course} & \csuse{src2exam@course} &
-            \textbf{Semester} & \csuse{src2exam@semester} \\
-            \textbf{Date} & \csuse{src2exam@examdate} &
-            \textbf{Lecturer} & \csuse{src2exam@lecturer} \\
+            \textbf{\csuse{src2crs@string@course}:} & \csuse{src2exam@course} &
+            \textbf{\csuse{src2crs@string@semester}:} & \csuse{src2exam@semester} \\
+            \textbf{\csuse{src2crs@string@date}:} & \csuse{src2exam@examdate} &
+            \textbf{\csuse{src2crs@string@lecturer}:} & \csuse{src2exam@lecturer} \\
         \end{tabularx}
     \end{titlepage}
 }
@@ -102,5 +146,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \ExecuteOptions{disablesolutions}
+\ExecuteOptions{en}
 
 \ProcessOptions\relax
