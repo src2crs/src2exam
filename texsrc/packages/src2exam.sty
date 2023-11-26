@@ -24,37 +24,58 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Commands for using a language                                                        %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\csdef{src2crs@selectlanguage:de}{
-    \csdef{src2crs@string@exam}{Klausur}
-    \csdef{src2crs@string@solution}{Lösung}
-    \csdef{src2crs@string@solutions}{Lösungen}
-    \csdef{src2crs@string@lecture}{Vorlesung}
-    \csdef{src2crs@string@course}{Kurs}
-    \csdef{src2crs@string@date}{Datum}
-    \csdef{src2crs@string@lecturer}{Dozent}
-    \csdef{src2crs@string@semester}{Semester}
+\csdef{src2exam@selectlanguage:de}{
+    \csdef{src2exam@string@exam}{Klausur}
+    \csdef{src2exam@string@solution}{Lösung}
+    \csdef{src2exam@string@solutions}{Lösungen}
+    \csdef{src2exam@string@lecture}{Vorlesung}
+    \csdef{src2exam@string@course}{Kurs}
+    \csdef{src2exam@string@date}{Datum}
+    \csdef{src2exam@string@lecturer}{Dozent}
+    \csdef{src2exam@string@semester}{Semester}
+    \csdef{src2exam@string@point}{Punkt}
+    \csdef{src2exam@string@points}{Punkte}
+    \csdef{src2exam@string@task}{Aufgabe}
+    \csdef{src2exam@string@tasks}{Aufgaben}
 }
 
-\csdef{src2crs@selectlanguage:en}{
-    \csdef{src2crs@string@exam}{Exam}
-    \csdef{src2crs@string@solution}{Solution}
-    \csdef{src2crs@string@solutions}{Solutions}
-    \csdef{src2crs@string@lecture}{Lecture}
-    \csdef{src2crs@string@course}{Course}
-    \csdef{src2crs@string@date}{Date}
-    \csdef{src2crs@string@lecturer}{Lecturer}
-    \csdef{src2crs@string@semester}{Semester}
+\csdef{src2exam@selectlanguage:en}{
+    \csdef{src2exam@string@exam}{Exam}
+    \csdef{src2exam@string@solution}{Solution}
+    \csdef{src2exam@string@solutions}{Solutions}
+    \csdef{src2exam@string@lecture}{Lecture}
+    \csdef{src2exam@string@course}{Course}
+    \csdef{src2exam@string@date}{Date}
+    \csdef{src2exam@string@lecturer}{Lecturer}
+    \csdef{src2exam@string@semester}{Semester}
+    \csdef{src2exam@string@point}{Point}
+    \csdef{src2exam@string@points}{Points}
+    \csdef{src2exam@string@task}{Task}
+    \csdef{src2exam@string@tasks}{Tasks}
 }
 
 \NewDocumentCommand{\examlanguage}{ m }{
     \str_case:nnF{#1}{
-        {de}{\csuse{src2crs@selectlanguage:de}}
-        {en}{\csuse{src2crs@selectlanguage:en}}
+        {de}{\csuse{src2exam@selectlanguage:de}}
+        {en}{\csuse{src2exam@selectlanguage:en}}
     }{
         \PackageError{src2exam}{
             Invalid~option~'#1'~for~\string\examlanguage.~Must~be~'de'~or~'en'.
         }{}
     }
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Helper commands to manage singular and plural.                                       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Singular/plural for points.
+\NewDocumentCommand{\pointsstring}{
+    o % points
+}{
+    \IfValueTF{#1}{
+        \int_compare:nTF{#1 = 1}{\csuse{src2exam@string@point}}{\csuse{src2exam@string@points}}
+    }{}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -88,6 +109,32 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Commands and environments for tasks.                                                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Counter for tasks.
+\newcounter{src2exam@task}
+
+% Assembles a task header.
+\NewDocumentCommand{\taskheader}{
+    o % points, typeset as [points]
+    o % description
+}{
+    \textbf{\csuse{src2exam@string@task}~\arabic{src2exam@task}}
+    \IfValueT{#2}{~\textbf{(#2)}}
+    \IfValueT{#1}{\hfill\textbf{[#1~\csuse{pointsstring}[#1]]}}
+}
+
+% Starts a task.
+% #1: points (optional)
+% #2: task description (optional)
+\NewDocumentCommand{\task}{ o o }{
+    \stepcounter{src2exam@task}
+    \newpage
+    \taskheader[#1][#2]
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Front Matter                                                                         %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -118,16 +165,16 @@
         {\huge\textbf{\csuse{src2exam@examtitle}}} \\
         \ifsolutionsT{%
             \vspace*{0.5cm}
-            {\Large\textbf{\csuse{src2crs@string@solutions}}}
+            {\Large\textbf{\csuse{src2exam@string@solutions}}}
         }
         \vspace*{0.5cm}
         \hrule
         \vspace*{0.5cm}
         \begin{tabularx}{\textwidth}{lXlX}
-            \textbf{\csuse{src2crs@string@course}:} & \csuse{src2exam@course} &
-            \textbf{\csuse{src2crs@string@semester}:} & \csuse{src2exam@semester} \\
-            \textbf{\csuse{src2crs@string@date}:} & \csuse{src2exam@examdate} &
-            \textbf{\csuse{src2crs@string@lecturer}:} & \csuse{src2exam@lecturer} \\
+            \textbf{\csuse{src2exam@string@course}:} & \csuse{src2exam@course} &
+            \textbf{\csuse{src2exam@string@semester}:} & \csuse{src2exam@semester} \\
+            \textbf{\csuse{src2exam@string@date}:} & \csuse{src2exam@examdate} &
+            \textbf{\csuse{src2exam@string@lecturer}:} & \csuse{src2exam@lecturer} \\
         \end{tabularx}
     \end{titlepage}
 }
