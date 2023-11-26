@@ -110,6 +110,30 @@
     \iftoggle{src2exam@solutions}{}{#1}
 }
 
+% TColorBox style for a solution
+\tcbset{solution/.style={
+    enhanced,
+    title=\csuse{src2exam@string@solution},
+    colbacktitle=black!5!white,
+    coltitle=black!75!white,
+    colback=black!2!white,
+    fonttitle=\bfseries,
+    %colframe=black!75!white,
+    boxrule=0.25pt,
+}}
+
+% Solution environment.
+% Uses a TColorBox to typeset the solution.
+\NewDocumentEnvironment{solution}{
+    b % solution content, only used if solutions are enabled
+}{
+    \ifsolutionsT{
+        \begin{tcolorbox}[solution]
+            #1
+        \end{tcolorbox}
+    }
+}{}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Commands and environments for tasks.                                                 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -123,8 +147,6 @@
     colback=black!5!white,
     colframe=black!75!white,
     boxrule=0.25pt,
-    %sharp corners, % TODO: why doesn't this work?
-    arc=0pt,outer arc=0pt, % workaround
 }}
 
 % Typesets a task header.
