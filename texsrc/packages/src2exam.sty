@@ -86,10 +86,14 @@
 
 % Mark a missing task.
 \NewDocumentCommand{\taskmissing}{
-    O{} % optional short description/sketch of the task
+    o % optional short description/sketch of the task
 }{
-    \todo[inline]{\csuse{src2exam@string@task}~\arabic{src2exam@task}~\csuse{src2exam@string@missing}}
-    #1
+    \csdef{src2exam@missingtask@caption}{\csuse{src2exam@string@task}~\arabic{src2exam@task}~\csuse{src2exam@string@missing}}
+    \todo[inline, caption={\csuse{src2exam@missingtask@caption}}]{
+        \IfValueTF{#1}
+            {\begin{minipage}{\textwidth}#1\end{minipage}}
+            {\csuse{src2exam@missingtask@caption}}
+    }
 }
 
 % Mark a missing solution.
