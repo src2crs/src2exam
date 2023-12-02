@@ -85,8 +85,11 @@
 }
 
 % Mark a missing task.
-\NewDocumentCommand{\taskmissing}{}{
+\NewDocumentCommand{\taskmissing}{
+    O{} % optional short description/sketch of the task
+}{
     \todo[inline]{\csuse{src2exam@string@task}~\arabic{src2exam@task}~\csuse{src2exam@string@missing}}
+    #1
 }
 
 % Mark a missing solution.
