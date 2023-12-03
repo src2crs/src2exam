@@ -30,8 +30,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \csdef{src2exam@selectlanguage:de}{
     \csdef{src2exam@string@exam}{Klausur}
-    \csdef{src2exam@string@solution}{Lösung}
-    \csdef{src2exam@string@solutions}{Lösungen}
+    \csdef{src2exam@string@solutionfor}{Lösung~zu}
+    \csdef{src2exam@string@solutionsfor}{Lösungen~zu}
     \csdef{src2exam@string@lecture}{Vorlesung}
     \csdef{src2exam@string@course}{Kurs}
     \csdef{src2exam@string@date}{Datum}
@@ -47,8 +47,8 @@
 
 \csdef{src2exam@selectlanguage:en}{
     \csdef{src2exam@string@exam}{Exam}
-    \csdef{src2exam@string@solution}{Solution}
-    \csdef{src2exam@string@solutions}{Solutions}
+    \csdef{src2exam@string@solutionfor}{Solution~for}
+    \csdef{src2exam@string@solutionsfor}{Solutions~for}
     \csdef{src2exam@string@lecture}{Lecture}
     \csdef{src2exam@string@course}{Course}
     \csdef{src2exam@string@date}{Date}
@@ -100,7 +100,7 @@
 
 % Mark a missing solution.
 \NewDocumentCommand{\solutionmissing}{}{
-    \todo[inline]{\csuse{src2exam@string@solution}~\arabic{src2exam@task}~\csuse{src2exam@string@missing}}
+    \todo[inline]{\csuse{src2exam@string@solutionfor}~\arabic{src2exam@task}~\csuse{src2exam@string@missing}}
 }
 
 % Show list of todos on a separate page.
@@ -141,16 +141,23 @@
 }
 
 % TColorBox style for a solution
-\tcbset{solution/.style={
+\tcbset{solutionheader/.style={
     enhanced,
-    title=\csuse{src2exam@string@solution},
-    colbacktitle=black!5!white,
-    coltitle=black!75!white,
+    % title=\csuse{src2exam@string@solutionfor},
+    % colbacktitle=black!5!white,
+    % coltitle=black!75!white,
     colback=black!2!white,
     fonttitle=\bfseries,
     %colframe=black!75!white,
     boxrule=0.25pt,
 }}
+
+% Typesets a solution header.
+\NewDocumentCommand{\solutionheader}{}{
+    \begin{tcolorbox}[solutionheader]
+        \textbf{\csuse{src2exam@string@solutionfor}~\csuse{src2exam@string@task}~\arabic{src2exam@task}}
+    \end{tcolorbox}
+}
 
 % Solution environment.
 % Uses a TColorBox to typeset the solution.
@@ -158,9 +165,10 @@
     b % solution content, only used if solutions are enabled
 }{
     \ifsolutionsT{
-        \begin{tcolorbox}[solution]
+        \solutionheader
+        \begin{minipage}{\linewidth}
             #1
-        \end{tcolorbox}
+        \end{minipage}
     }
 }{}
 
@@ -240,7 +248,7 @@
         {\huge\textbf{\csuse{src2exam@examtitle}}} \\
         \ifsolutionsT{%
             \vspace*{0.5cm}
-            {\Large\textbf{\csuse{src2exam@string@solutions}}}
+            {\Large\textbf{\csuse{src2exam@string@solutionsfor}}}
         }
         \vspace*{0.5cm}
         \hrule
