@@ -42,6 +42,7 @@
     \csdef{src2exam@string@task}{Aufgabe}
     \csdef{src2exam@string@tasks}{Aufgaben}
     \csdef{src2exam@string@missing}{fehlt}
+    \csdef{src2exam@string@hint}{Hinweis}
 }
 
 \csdef{src2exam@selectlanguage:en}{
@@ -58,6 +59,7 @@
     \csdef{src2exam@string@task}{Task}
     \csdef{src2exam@string@tasks}{Tasks}
     \csdef{src2exam@string@missing}{missing}
+    \csdef{src2exam@string@hint}{Hint}
 }
 
 \NewDocumentCommand{\examlanguage}{ m }{
@@ -196,6 +198,15 @@
     \stepcounter{src2exam@task}
     \newpage
     \taskheader[#1][#2]
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Special Texts                                                                        %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Hint
+\NewDocumentCommand{\hint}{ m }{
+    \textbf{\csuse{src2exam@string@hint}:}~#1
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
