@@ -200,9 +200,10 @@
 }
 
 % Starts a task.
-% #1: points (optional)
-% #2: task description (optional)
-\NewDocumentCommand{\task}{ o o }{
+\NewDocumentCommand{\task}{ 
+    o % points
+    o % description
+}{
     \stepcounter{src2exam@task}
     \newpage
     \taskheader[#1][#2]
