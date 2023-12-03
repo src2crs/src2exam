@@ -181,6 +181,16 @@
     \ifsolutionsT{#1}
 }
 
+% Leaves space for a solution.
+\NewDocumentCommand{\answerspace}{
+    m % height of the space
+    o % solution content, only used if solutions are enabled
+}{
+    \begin{minipage}[c][#1]{\linewidth}
+    \IfValueT{#2}{\answer{#2}}
+    \end{minipage}
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Commands and environments for tasks.                                                 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
