@@ -172,6 +172,15 @@
     }
 }{}
 
+% Inline solution macro.
+% For now, just a wrapper around \ifsolutionsT.
+% May add more formatting/functionality later.
+\NewDocumentCommand{\answer}{
+    m % solution content, only used if solutions are enabled
+}{
+    \ifsolutionsT{#1}
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Commands and environments for tasks.                                                 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
