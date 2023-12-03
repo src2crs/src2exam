@@ -176,8 +176,9 @@
 % Commands and environments for tasks.                                                 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Counter for tasks.
+% Counters for tasks.
 \newcounter{src2exam@task}
+\newcounter{src2exam@subtask}[src2exam@task]
 
 % TColorBox for a task header.
 \tcbset{taskheader/.style={
@@ -207,6 +208,21 @@
     \stepcounter{src2exam@task}
     \newpage
     \taskheader[#1][#2]
+}
+
+% Environment for subtasks.
+\NewDocumentEnvironment{subtasks}{
+    o % points
+    o % description
+}{
+    \begin{enumerate}[label=\alph*)]
+}{
+    \end{enumerate}
+}
+
+% Starts a subtask.
+\NewDocumentCommand{\subtask}{}{
+    \item
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
