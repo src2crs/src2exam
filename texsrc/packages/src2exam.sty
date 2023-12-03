@@ -43,6 +43,7 @@
     \csdef{src2exam@string@tasks}{Aufgaben}
     \csdef{src2exam@string@missing}{fehlt}
     \csdef{src2exam@string@hint}{Hinweis}
+    \csdef{src2exam@string@remark}{Bemerkung}
 }
 
 \csdef{src2exam@selectlanguage:en}{
@@ -60,6 +61,7 @@
     \csdef{src2exam@string@tasks}{Tasks}
     \csdef{src2exam@string@missing}{missing}
     \csdef{src2exam@string@hint}{Hint}
+    \csdef{src2exam@string@remark}{Remark}
 }
 
 \NewDocumentCommand{\examlanguage}{ m }{
@@ -253,9 +255,14 @@
 % Special Texts                                                                        %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Hint
+% hints
 \NewDocumentCommand{\hint}{ m }{
     \par\textbf{\csuse{src2exam@string@hint}:}~#1
+}
+
+% remarks
+\NewDocumentCommand{\remark}{ m }{
+    \par\textbf{\csuse{src2exam@string@remark}:}~#1
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
