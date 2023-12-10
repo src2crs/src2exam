@@ -42,6 +42,7 @@
     \csdef{src2exam@string@task}{Aufgabe}
     \csdef{src2exam@string@tasks}{Aufgaben}
     \csdef{src2exam@string@missing}{fehlt}
+    \csdef{src2exam@string@incomplete}{unvollständig}
     \csdef{src2exam@string@hint}{Hinweis}
     \csdef{src2exam@string@remark}{Bemerkung}
 }
@@ -60,6 +61,7 @@
     \csdef{src2exam@string@task}{Task}
     \csdef{src2exam@string@tasks}{Tasks}
     \csdef{src2exam@string@missing}{missing}
+    \csdef{src2exam@string@incomplete}{incomplete}
     \csdef{src2exam@string@hint}{Hint}
     \csdef{src2exam@string@remark}{Remark}
 }
@@ -88,21 +90,36 @@
     }{}
 }
 
+% Helper for creating a caption for the current task in todos.
+\csdef{src2exam@currenttask@caption}{\csuse{src2exam@string@task}~\arabic{src2exam@task}}
+
 % Mark a missing task.
 \NewDocumentCommand{\taskmissing}{
     o % optional short description/sketch of the task
 }{
-    \csdef{src2exam@missingtask@caption}{\csuse{src2exam@string@task}~\arabic{src2exam@task}~\csuse{src2exam@string@missing}}
-    \todo[inline, caption={\csuse{src2exam@missingtask@caption}}]{
+    \todo[inline, caption={\csuse{src2exam@currenttask@caption}~\csuse{src2exam@string@missing}}]{
         \IfValueTF{#1}
             {\begin{minipage}{\textwidth}#1\end{minipage}}
-            {\csuse{src2exam@missingtask@caption}}
+            {\csuse{src2exam@currenttask@caption}~\csuse{src2exam@string@missing}}
     }
+}
+
+% Mark an incomplete task.
+\NewDocumentCommand{\taskincomplete}{
+    o % optional short description of what is missing
+}{
+    \todo[inline, caption={\csuse{src2exam@currenttask@caption}~\csuse{src2exam@string@incomplete}}]{
+        \csuse{src2exam@currenttask@caption}~\csuse{src2exam@string@incomplete}}
 }
 
 % Mark a missing solution.
 \NewDocumentCommand{\solutionmissing}{}{
     \todo[inline]{\csuse{src2exam@string@solutionfor}~\arabic{src2exam@task}~\csuse{src2exam@string@missing}}
+}
+
+% Mark an incomplete solution.
+\NewDocumentCommand{\solutionincomplete}{}{
+    \todo[inline]{\csuse{src2exam@string@solutionfor}~\arabic{src2exam@task}~\csuse{src2exam@string@incomplete}}
 }
 
 % Show list of todos on a separate page.
