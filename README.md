@@ -1,4 +1,4 @@
-# Exam Tester
+# Src2Exam
 
 A library providing tools for running automated tests on tasks
 in the context of programming courses and exams.

@@ -1,0 +1,10 @@
+[package]
+name = "src2exam"
+version = "0.1.0"
+edition = "2021"
+
+[dev-dependencies]
+tempfile = "3.15.0"
+
+[dependencies]
+clap = { version = "4.5.26", features = ["derive", "string"] }
