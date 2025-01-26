@@ -1,0 +1,152 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{src2report}[2025/01/27 Src2Crs Sectioning for Reports]
+
+\RequirePackage{tcolorbox}
+\tcbuselibrary{skins}
+\tcbuselibrary{listingsutf8}
+\RequirePackage{bold-extra}
+
+\RequirePackage{multicol}
+
+\ExplSyntaxOn
+\keys_define:nn { listingcmds }{
+    lang .code:n = \edef\src@report@lang{#1},
+    lang .initial:n = {go},
+}
+\ExplSyntaxOff
+\ProcessKeyOptions
+
+% Include LUA file with function definitions.
+\directlua{ dofile("src2report.lua") }
+
+%%% Logic for managing lists of tasks and students. %%%
+
+% Set the base directory for the exam.
+%
+% #1: The base directory.
+\NewDocumentCommand{\setbasedir}{m}{%
+  \directlua{ report:set_base_dir("\luaescapestring{#1}") }
+}
+
+% Set the directory name for the tasks.
+%
+% #1: The directory name.
+\NewDocumentCommand{\settaskdir}{m}{%
+  \directlua{ report:set_task_dir("\luaescapestring{#1}") }
+}
+
+% Set the directory name for the submissions.
+%
+% #1: The directory name.
+\NewDocumentCommand{\setsubmissiondir}{m}{%
+  \directlua{ report:set_submission_dir("\luaescapestring{#1}") }
+}
+
+% Parse the filesystem for tasks.
+\NewDocumentCommand{\parsetasks}{}{%
+  \directlua{ report:parse_task_dirs() }
+}
+
+% Parse the filesystem for students.
+\NewDocumentCommand{\parsestudents}{}{%
+  \directlua{ report:parse_submission_dirs() }
+}
+
+% Parse the filesystem for tasks and students.
+\NewDocumentCommand{\parsefilesystem}{}{%
+  \directlua{ report:parse_filesystem() }
+}
+
+% Add a task to the list of tasks.
+%
+% #1: The directory to include.
+% #2: The task number or name.
+\NewDocumentCommand{\addtask}{m m}{%
+  \directlua{ report:add_task("\luaescapestring{#1}", "#2") }
+}
+
+% Add a student to the list of studentss.
+%
+% #1: The directory to include.
+% #2: The task number or name.
+\NewDocumentCommand{\addstudent}{m m}{%
+  \directlua{ report:add_student("\luaescapestring{#1}", "#2") }
+}
+
+% Print all submission reports.
+\NewDocumentCommand{\printsubmissionreports}{}{%
+  \directlua{ report:print_submission_reports() }
+}
+
+
+%%% Typesetting headings, listings, etc. %%%
+
+% Default strings.
+\def\src@report@exam@title{Exam}
+
+% Set the title for the submission reports.
+% (E.g. for use in different languages)
+%
+% #1: The title.
+\NewDocumentCommand{\setexamtitle}{m}{%
+  \def\src@report@exam@title{#1}
+}
+
+% Print the heading for a submission report.
+\NewDocumentCommand{\submissionreporthead}{m}{%
+  \cleardoublepage
+  \ihead{\textbf{\src@report@exam@title}}
+  \ohead{\textbf{#1}}
+}
+
+% Print the heading for a task.
+%
+% #1: The task number or name.
+% vlc #2: The file path to add a listing for.
+\NewDocumentCommand{\taskreport}{m m}{%
+  \inputcodeblock{#2}[#1]
+}
+
+
+
+%%% Listings %%%
+
+\lstdefinestyle{src@report@lststyle@common}{
+    language={\src@report@lang},
+    basicstyle=\ttfamily\small,
+    numberstyle=\tiny,
+    numbers=left,
+    stepnumber=1,
+    numbersep=8pt,
+    showstringspaces=false,
+    aboveskip=-2mm,
+    belowskip=-2mm,
+    tabsize=2,
+}
+
+\tcbset{src@report@tcbstyle@common/.style={
+    enhanced,
+    sharp corners,
+    colback=black!10!white,
+    colframe=black!10!white,
+    boxrule=5pt,titlerule=5pt,
+    coltitle=black!80!black,
+    colbacktitle=black!20!white, enhanced,
+}}
+
+% Inserts a listing from a file.
+% #1: extra options for tcolorbox
+% #2: listing file
+% #3: title
+% #4: line range
+% #5: extra listing options
+\NewTCBInputListing{\inputcodeblock}{ O{} m o D<>{0-1000} O{} }{%
+    src@report@tcbstyle@common,
+    listing only,
+    listing options={style={src@report@lststyle@common}, linerange=#4, #5},
+    listing file={#2},
+    IfValueT={#3}{title={\large{\textbf{#3}}}},
+    #1,
+}
+
+\endinput

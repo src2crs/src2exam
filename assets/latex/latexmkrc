@@ -1,0 +1,18 @@
+my $cwd = getcwd();
+
+$out_dir = "$cwd/report";
+$pdflatex = 'lualatex -interaction=nonstopmode';
+$pdf_mode = 1;
+$do_cd = 1;
+$clean_ext = 'snm nav synctex.gz';
+
+@default_files = (
+    "report.tex",
+);
+
+# Create the output directory and put a .gitignore file in it
+if (! -d $out_dir) {
+    mkdir $out_dir;
+}
+open my $gitignore, '>', "$out_dir/.gitignore";
+print $gitignore "*\n";
