@@ -107,7 +107,7 @@ impl ExamInfo {
 
     /// Returns the test timeout for the exam.
     pub fn test_timeout(&self) -> Duration {
-        self.test_timeout.clone()
+        self.test_timeout
     }
 
     /// Sets the test timeout for the exam.

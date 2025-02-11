@@ -11,8 +11,8 @@ impl ExamTester {
     pub fn new(exam_info: ExamInfo, verbose: bool, dry_run: bool) -> Self {
         Self {
             exam_info,
-            verbose: verbose,
-            dry_run: dry_run,
+            verbose,
+            dry_run,
         }
     }
 

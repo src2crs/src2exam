@@ -79,15 +79,15 @@ mod test {
 
     mod build_results {
         pub fn build_failure() -> String {
-            vec!["...", "FAIL    path/to/module.go [build failed]", "..."].join("\n")
+            ["...", "FAIL    path/to/module.go [build failed]", "..."].join("\n")
         }
 
         pub fn test_failure() -> String {
-            vec!["...", "FAIL    path/to/module.go      0.123s", "..."].join("\n")
+            ["...", "FAIL    path/to/module.go      0.123s", "..."].join("\n")
         }
 
         pub fn timeout() -> String {
-            vec![
+            [
                 "...",
                 "panic: test timed out after 5s",
                 "...",
@@ -98,7 +98,7 @@ mod test {
         }
 
         pub fn stack_overflow() -> String {
-            vec![
+            [
                 "...",
                 "runtime: goroutine stack exceeds 1000000000-byte limit",
                 "...",
@@ -111,7 +111,7 @@ mod test {
         }
 
         pub fn crash() -> String {
-            vec![
+            [
                 "...",
                 "panic: runtime error: makeslice: len out of range",
                 "...",
@@ -122,7 +122,7 @@ mod test {
         }
 
         pub fn success() -> String {
-            return vec!["...", "ok", "..."].join("\n");
+            ["...", "ok", "..."].join("\n")
         }
     }
 
