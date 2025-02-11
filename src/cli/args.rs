@@ -29,7 +29,8 @@ impl Args {
 
     /// Returns an exam info based on the arguments.
     pub fn exam_info(&self) -> ExamInfo {
-        let mut exam_info = ExamInfo::new(self.base_dir());
+        let mut exam_info = ExamInfo::new_de();
+        exam_info.set_base_dir(self.base_dir());
         exam_info.set_test_timeout(self.timeout);
         exam_info
     }

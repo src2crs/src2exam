@@ -7,7 +7,8 @@ fn main() {
     let testdata_dir = base_dir.join("testdata");
     let exam_dir = testdata_dir.join("go-exam");
 
-    let exam_info = exam::ExamInfo::new(&exam_dir);
+    let mut exam_info = exam::ExamInfo::new_de();
+    exam_info.set_base_dir(exam_dir);
     let submissions_dir = exam_info.submissions_dir();
     let tasks_dir = exam_info.tasks_dir();
     let grading_dir = exam_info.grading_dir();
@@ -15,7 +16,7 @@ fn main() {
     let student_names = exam_info.student_names().unwrap();
     let task_names = exam_info.task_names().unwrap();
 
-    println!("ExamInfo for the example Go exam in {:?}:", exam_dir);
+    println!("ExamInfo for the example Go exam:");
     println!("{:#?}", exam_info);
     println!();
 

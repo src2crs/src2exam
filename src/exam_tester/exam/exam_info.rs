@@ -1,27 +1,36 @@
+use crate::exam_tester::exam::exam_info_defaults::ExamInfoDefaults;
 use std::path::PathBuf;
 use std::time::Duration;
 
 #[derive(Debug)]
 pub struct ExamInfo {
     base_dir: PathBuf,
-    custom_tasks_dir: Option<PathBuf>,
-    custom_submissions_dir: Option<PathBuf>,
-    custom_grading_dir: Option<PathBuf>,
-    test_timeout: Option<Duration>,
+    tasks_dirname: String,
+    submissions_dirname: String,
+    grading_dirname: String,
+    test_timeout: Duration,
 }
 
 impl ExamInfo {
     /// Creates a new `ExamInfo` instance with the given base directory.
-    pub fn new<T: Into<PathBuf>>(base_dir: T) -> Self {
+    pub fn new(defaults: ExamInfoDefaults) -> Self {
         Self {
-            base_dir: base_dir.into(),
-            ..Default::default()
+            base_dir: defaults.base_dir(),
+            tasks_dirname: defaults.tasks_dirname(),
+            submissions_dirname: defaults.submissions_dirname(),
+            grading_dirname: defaults.grading_dirname(),
+            test_timeout: defaults.test_timeout_default(),
         }
     }
 
-    /// Returns the default base directory to use for the exam.
-    pub fn base_dir_default() -> PathBuf {
-        std::env::current_dir().unwrap()
+    /// Creates a new `ExamInfo` instance with german defaults.
+    pub fn new_de() -> Self {
+        Self::new(ExamInfoDefaults::De)
+    }
+
+    /// Creates a new `ExamInfo` instance with english defaults.
+    pub fn new_en() -> Self {
+        Self::new(ExamInfoDefaults::En)
     }
 
     /// Returns the base directory of the exam.
@@ -29,44 +38,30 @@ impl ExamInfo {
         &self.base_dir
     }
 
-    /// Returns the default path to the submissions directory.
-    pub fn submissions_dir_default(&self) -> PathBuf {
-        self.base_dir.join("abgaben")
+    /// Sets the base directory of the exam.
+    pub fn set_base_dir<T: Into<PathBuf>>(&mut self, base_dir: T) {
+        self.base_dir = base_dir.into();
     }
 
     /// Returns the path to the submissions directory.
     /// Uses the default submissions directory if no custom directory is set.
     pub fn submissions_dir(&self) -> PathBuf {
-        self.custom_submissions_dir
-            .clone()
-            .unwrap_or_else(|| self.submissions_dir_default())
+        self.base_dir.join(&self.submissions_dirname)
     }
 
     /// Sets the custom submissions directory.
-    pub fn set_submissions_dir<T: Into<PathBuf>>(&mut self, dir: T) {
-        self.custom_submissions_dir = Some(dir.into());
-    }
-
-    /// Returns the default path to the tasks directory.
-    pub fn tasks_dir_default(&self) -> PathBuf {
-        self.base_dir.join("aufgaben")
+    pub fn set_submissions_dirname<T: Into<String>>(&mut self, dir: T) {
+        self.submissions_dirname = dir.into();
     }
 
     /// Returns the path to the tasks directory.
     pub fn tasks_dir(&self) -> PathBuf {
-        self.custom_tasks_dir
-            .clone()
-            .unwrap_or_else(|| self.tasks_dir_default())
+        self.base_dir.join(&self.tasks_dirname)
     }
 
     /// Sets the custom tasks directory.
-    pub fn set_tasks_dir<T: Into<PathBuf>>(&mut self, dir: T) {
-        self.custom_tasks_dir = Some(dir.into());
-    }
-
-    /// Returns the default path to the grading directory.
-    pub fn grading_dir_default(&self) -> PathBuf {
-        self.base_dir.join("bewertung")
+    pub fn set_tasks_dirname<T: Into<String>>(&mut self, dir: T) {
+        self.tasks_dirname = dir.into();
     }
 
     /// Returns the path to the grading directory.
@@ -77,14 +72,12 @@ impl ExamInfo {
     /// Files in this directory are supposed to be modified when grading the exam.
     /// From these files, the final reports will be generated.
     pub fn grading_dir(&self) -> PathBuf {
-        self.custom_grading_dir
-            .clone()
-            .unwrap_or_else(|| self.grading_dir_default())
+        self.base_dir.join(&self.grading_dirname)
     }
 
     /// Sets the custom grading directory.
-    pub fn set_grading_dir<T: Into<PathBuf>>(&mut self, dir: T) {
-        self.custom_grading_dir = Some(dir.into());
+    pub fn set_grading_dirname<T: Into<String>>(&mut self, dir: T) {
+        self.grading_dirname = dir.into();
     }
 
     /// Returns the student names for the exam.
@@ -114,27 +107,13 @@ impl ExamInfo {
 
     /// Returns the test timeout for the exam.
     pub fn test_timeout(&self) -> Duration {
-        self.test_timeout
-            .unwrap_or_else(|| Self::test_timeout_default())
+        self.test_timeout.clone()
     }
 
     /// Sets the test timeout for the exam.
     /// The timeout is specified in seconds.
     pub fn set_test_timeout(&mut self, timeout: u64) {
-        self.test_timeout = Some(Duration::from_secs(timeout));
-    }
-}
-
-impl Default for ExamInfo {
-    // A default ExamInfo instance is created with the current directory as the base directory.
-    fn default() -> Self {
-        Self {
-            base_dir: Self::base_dir_default(),
-            custom_tasks_dir: None,
-            custom_submissions_dir: None,
-            custom_grading_dir: None,
-            test_timeout: None,
-        }
+        self.test_timeout = Duration::from_secs(timeout);
     }
 }
 
@@ -143,13 +122,13 @@ mod tests {
     use super::*;
 
     #[test]
-    fn new_examinfo_dirs() {
-        let exam_info = ExamInfo::new("exam_basedir");
+    fn new_examinfo_dirs_de() {
+        let exam_info = ExamInfo::new_de();
 
-        let base_dir = PathBuf::from("exam_basedir");
-        let submissions_dir = PathBuf::from("exam_basedir/abgaben");
-        let tasks_dir = PathBuf::from("exam_basedir/aufgaben");
-        let grading_dir = PathBuf::from("exam_basedir/bewertung");
+        let base_dir = PathBuf::from(".");
+        let submissions_dir = PathBuf::from("./abgaben");
+        let tasks_dir = PathBuf::from("./aufgaben");
+        let grading_dir = PathBuf::from("./bewertung");
 
         assert_eq!(exam_info.base_dir().to_owned(), base_dir);
         assert_eq!(exam_info.submissions_dir(), submissions_dir,);
@@ -158,13 +137,13 @@ mod tests {
     }
 
     #[test]
-    fn default_examinfo_dirs() {
-        let exam_info = ExamInfo::default();
+    fn new_examinfo_dirs_en() {
+        let exam_info = ExamInfo::new_en();
 
-        let base_dir = std::env::current_dir().unwrap();
-        let submissions_dir = base_dir.join("abgaben");
-        let tasks_dir = base_dir.join("aufgaben");
-        let grading_dir = base_dir.join("bewertung");
+        let base_dir = PathBuf::from(".");
+        let submissions_dir = PathBuf::from("./submissions");
+        let tasks_dir = PathBuf::from("./tasks");
+        let grading_dir = PathBuf::from("./grading");
 
         assert_eq!(exam_info.base_dir().to_owned(), base_dir);
         assert_eq!(exam_info.submissions_dir(), submissions_dir,);
@@ -174,19 +153,25 @@ mod tests {
 
     #[test]
     fn custom_dirs() {
-        let mut exam_info = ExamInfo::new("exam_basedir");
+        let mut exam_info = ExamInfo::new_en();
+        exam_info.set_base_dir("exam_basedir");
 
-        let custom_submissions_dir = PathBuf::from("custom_submissions");
-        let custom_tasks_dir = PathBuf::from("custom_tasks");
-        let custom_grading_dir = PathBuf::from("custom_grading");
+        exam_info.set_submissions_dirname("custom_submissions");
+        exam_info.set_tasks_dirname("custom_tasks");
+        exam_info.set_grading_dirname("custom_grading");
 
-        exam_info.set_submissions_dir(&custom_submissions_dir);
-        exam_info.set_tasks_dir(&custom_tasks_dir);
-        exam_info.set_grading_dir(&custom_grading_dir);
-
-        assert_eq!(exam_info.submissions_dir(), custom_submissions_dir);
-        assert_eq!(exam_info.tasks_dir(), custom_tasks_dir);
-        assert_eq!(exam_info.grading_dir(), custom_grading_dir);
+        assert_eq!(
+            exam_info.submissions_dir(),
+            PathBuf::from("exam_basedir/custom_submissions")
+        );
+        assert_eq!(
+            exam_info.tasks_dir(),
+            PathBuf::from("exam_basedir/custom_tasks")
+        );
+        assert_eq!(
+            exam_info.grading_dir(),
+            PathBuf::from("exam_basedir/custom_grading")
+        );
     }
 
     #[test]
@@ -195,7 +180,8 @@ mod tests {
         let testdata_dir = base_dir.join("testdata");
         let exam_dir = testdata_dir.join("go-exam");
 
-        let exam_info = ExamInfo::new(exam_dir);
+        let mut exam_info = ExamInfo::new_de();
+        exam_info.set_base_dir(exam_dir);
         let student_names = exam_info.student_names().unwrap();
 
         assert_eq!(student_names.len(), 3);
@@ -213,8 +199,9 @@ mod tests {
         let testdata_dir = base_dir.join("testdata");
         let exam_dir = testdata_dir.join("go-exam");
 
-        let mut exam_info = ExamInfo::new(exam_dir);
-        exam_info.set_submissions_dir("non_existent_dir");
+        let mut exam_info = ExamInfo::new_en();
+        exam_info.set_base_dir(exam_dir);
+        exam_info.set_submissions_dirname("non_existent_dir");
         let student_names = exam_info.student_names();
 
         assert_eq!(
@@ -229,7 +216,8 @@ mod tests {
         let testdata_dir = base_dir.join("testdata");
         let exam_dir = testdata_dir.join("go-exam");
 
-        let exam_info = ExamInfo::new(exam_dir);
+        let mut exam_info = ExamInfo::new_de();
+        exam_info.set_base_dir(exam_dir);
         let task_names = exam_info.task_names().unwrap();
 
         assert_eq!(task_names.len(), 3);
@@ -244,8 +232,9 @@ mod tests {
         let testdata_dir = base_dir.join("testdata");
         let exam_dir = testdata_dir.join("go-exam");
 
-        let mut exam_info = ExamInfo::new(exam_dir);
-        exam_info.set_tasks_dir("non_existent_dir");
+        let mut exam_info = ExamInfo::new_de();
+        exam_info.set_base_dir(exam_dir);
+        exam_info.set_tasks_dirname("non_existent_dir");
         let task_names = exam_info.task_names();
 
         assert_eq!(
