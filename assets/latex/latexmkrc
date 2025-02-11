@@ -1,6 +1,6 @@
 my $cwd = getcwd();
 
-$out_dir = "$cwd/report";
+$out_dir = "$cwd/build";
 $pdflatex = 'lualatex -interaction=nonstopmode';
 $pdf_mode = 1;
 $do_cd = 1;
