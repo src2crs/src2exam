@@ -5,12 +5,12 @@ use std::time::Duration;
 /// for different languages.
 /// Uses `En` as the default language.
 #[derive(Debug)]
-pub enum ExamInfoDefaults {
+pub enum ExamInfoLanguage {
     En,
     De,
 }
 
-impl ExamInfoDefaults {
+impl ExamInfoLanguage {
     /// Returns the default path to the submissions directory.
     pub fn submissions_dirname(&self) -> String {
         String::from(match self {

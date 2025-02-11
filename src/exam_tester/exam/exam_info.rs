@@ -1,4 +1,4 @@
-use crate::exam_tester::exam::exam_info_defaults::ExamInfoDefaults;
+use crate::exam_tester::exam::exam_info_language::ExamInfoLanguage;
 use std::path::PathBuf;
 use std::time::Duration;
 
@@ -13,24 +13,24 @@ pub struct ExamInfo {
 
 impl ExamInfo {
     /// Creates a new `ExamInfo` instance with the given base directory.
-    pub fn new(defaults: ExamInfoDefaults) -> Self {
+    pub fn new(lang: ExamInfoLanguage) -> Self {
         Self {
-            base_dir: defaults.base_dir(),
-            tasks_dirname: defaults.tasks_dirname(),
-            submissions_dirname: defaults.submissions_dirname(),
-            grading_dirname: defaults.grading_dirname(),
-            test_timeout: defaults.test_timeout_default(),
+            base_dir: lang.base_dir(),
+            tasks_dirname: lang.tasks_dirname(),
+            submissions_dirname: lang.submissions_dirname(),
+            grading_dirname: lang.grading_dirname(),
+            test_timeout: lang.test_timeout_default(),
         }
     }
 
     /// Creates a new `ExamInfo` instance with german defaults.
     pub fn new_de() -> Self {
-        Self::new(ExamInfoDefaults::De)
+        Self::new(ExamInfoLanguage::De)
     }
 
     /// Creates a new `ExamInfo` instance with english defaults.
     pub fn new_en() -> Self {
-        Self::new(ExamInfoDefaults::En)
+        Self::new(ExamInfoLanguage::En)
     }
 
     /// Returns the base directory of the exam.
