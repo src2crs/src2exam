@@ -54,6 +54,7 @@ pub fn copy_subdirs(src: &Path, dest: &Path) {
     println!("Copying subdirectories:");
     println!("  source: {:?}", src);
     println!("  destination: {:?}", dest);
+
     for entry in dir_iter {
         let entry = entry.unwrap();
         let src_path = entry.path();

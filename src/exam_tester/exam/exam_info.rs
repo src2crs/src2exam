@@ -143,7 +143,7 @@ impl ExamInfo {
     /// TODO: Pretty print the output.
     pub fn summary(&self) -> String {
         format!(
-            "Directories:\n{}\nProperties:\n{}",
+            "Summary:\n{}\n{}",
             self.directory_summary(),
             self.property_summary(),
         )
