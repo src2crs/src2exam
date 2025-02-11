@@ -107,13 +107,46 @@ impl ExamInfo {
 
     /// Returns the test timeout for the exam.
     pub fn test_timeout(&self) -> Duration {
-        self.test_timeout.clone()
+        self.test_timeout
     }
 
     /// Sets the test timeout for the exam.
     /// The timeout is specified in seconds.
     pub fn set_test_timeout(&mut self, timeout: u64) {
         self.test_timeout = Duration::from_secs(timeout);
+    }
+
+    /// Returns a string summarizing the ExamInfo's directories.
+    fn directory_summary(&self) -> String {
+        format!(
+            "Base directory: {:?}\nSubmissions directory: {:?}\nTasks directory: {:?}\nGrading directory: {:?}\nTest timeout: {:?}",
+            self.base_dir(),
+            self.submissions_dir(),
+            self.tasks_dir(),
+            self.grading_dir(),
+            self.test_timeout(),
+        )
+    }
+
+    /// Returns a string summarizing the ExamInfo's student and task names.
+    fn property_summary(&self) -> String {
+        let student_names = self.student_names().unwrap_or_default();
+        let task_names = self.task_names().unwrap_or_default();
+
+        format!(
+            "Student names: {:?}\nTask names: {:?}",
+            student_names, task_names
+        )
+    }
+
+    /// Returns a string containing a summary of the ExamInfo.
+    /// TODO: Pretty print the output.
+    pub fn summary(&self) -> String {
+        format!(
+            "Summary:\n{}\n{}",
+            self.directory_summary(),
+            self.property_summary(),
+        )
     }
 }
 

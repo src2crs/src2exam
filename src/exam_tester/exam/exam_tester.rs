@@ -3,11 +3,17 @@ use crate::exam_tester::process::GoRunner;
 
 pub struct ExamTester {
     exam_info: ExamInfo,
+    verbose: bool,
+    dry_run: bool,
 }
 
 impl ExamTester {
-    pub fn new(exam_info: ExamInfo) -> Self {
-        Self { exam_info }
+    pub fn new(exam_info: ExamInfo, verbose: bool, dry_run: bool) -> Self {
+        Self {
+            exam_info,
+            verbose,
+            dry_run,
+        }
     }
 
     /// Copies the submissions into the grading directory.
@@ -15,11 +21,18 @@ impl ExamTester {
         let submissions_dir = self.exam_info.submissions_dir();
         let grading_dir = self.exam_info.grading_dir();
 
-        crate::filesystem::copy_subdirs(&submissions_dir, &grading_dir);
+        println!(
+            "Copying submissions from {:?} to {:?}",
+            submissions_dir, grading_dir
+        );
+
+        if !self.dry_run() {
+            crate::filesystem::copy_subdirs(&submissions_dir, &grading_dir);
+        }
     }
 
     /// Copies tests from the tasks directory to the grading directory.
-    /// More preisely, copies all files ending in `_test.go` from
+    /// More precisely, copies all files ending in `_test.go` from
     /// the tasks to all corresponding submissions in the grading directory.
     ///
     /// The following conditions apply:
@@ -37,10 +50,18 @@ impl ExamTester {
         for task_name in &task_names {
             let task_dir = tasks_dir.join(task_name);
             let test_files = crate::filesystem::files_with_suffix(&task_dir, "_test.go").unwrap();
+
+            println!("Copying tests for task: {}", task_name);
+
             for student_name in &student_names {
                 let student_dir = grading_dir.join(student_name);
                 let student_task_dir = student_dir.join(task_name);
-                crate::filesystem::copy_files(&test_files, &task_dir, &student_task_dir);
+
+                println!("  Student: {}", student_name);
+
+                if !self.dry_run() {
+                    crate::filesystem::copy_files(&test_files, &task_dir, &student_task_dir);
+                }
             }
         }
     }
@@ -65,17 +86,45 @@ impl ExamTester {
                 print!("  {}: ", task_name);
                 let student_task_dir = grading_dir.join(student_name).join(task_name);
 
-                let runner = GoRunner::new(&student_task_dir, self.exam_info.test_timeout());
-                let test_result = runner.run_tests();
+                if self.dry_run() {
+                    print!("(dry run)");
+                } else {
+                    let runner = GoRunner::new(&student_task_dir, self.exam_info.test_timeout());
+                    let test_result = runner.run_tests();
 
-                let result_message = test_result.to_string_de();
-                let grading_message = format!("// BEWERTUNG: \n// TESTS: {}", result_message);
+                    let result_message = test_result.to_string_de();
+                    let grading_message = format!("// BEWERTUNG: \n// TESTS: {}", result_message);
 
-                // Print result message and append result to source file.
-                println!("{}", result_message);
-                let source_file = student_task_dir.join(format!("{}.go", task_name));
-                crate::filesystem::append_to_file(&source_file, &grading_message);
+                    // Print result message and append result to source file.
+                    print!("{}", result_message);
+                    let source_file = student_task_dir.join(format!("{}.go", task_name));
+                    crate::filesystem::append_to_file(&source_file, &grading_message);
+                }
+                println!();
             }
+        }
+    }
+
+    /// Returns whether verbose mode is enabled.
+    /// Verbose mode is automatically enabled in dry run mode.
+    pub fn verbose(&self) -> bool {
+        self.dry_run() || self.verbose
+    }
+
+    /// Returns whether dry run mode is enabled.
+    pub fn dry_run(&self) -> bool {
+        self.dry_run
+    }
+
+    /// Prints info about what is happening.
+    pub fn print_info(&self) {
+        println!("Running in directory: {:?}", self.exam_info.base_dir());
+        if self.verbose() {
+            println!("{}", self.exam_info.summary());
+        }
+
+        if self.dry_run() {
+            println!("Dry run mode enabled.");
         }
     }
 }
