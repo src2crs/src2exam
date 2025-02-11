@@ -9,7 +9,7 @@ fn main() {
 
     let mut exam_info = ExamInfo::new_de();
     exam_info.set_base_dir(exam_dir);
-    let exam_tester = ExamTester::new(exam_info);
+    let exam_tester = ExamTester::new(exam_info, false, false);
 
     // Copying student submissions and tests to the grading directory.
     // Note the ordering of the operations:

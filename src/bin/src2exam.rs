@@ -1,22 +1,17 @@
 use src2exam::cli::Args;
-use src2exam::exam_tester::exam::{ExamInfo, ExamTester};
+use src2exam::exam_tester::exam::ExamTester;
 
 use clap::Parser;
 
 fn main() {
     let args = Args::parse();
-    let exam_info = ExamInfo::from(&args);
+    let exam_tester = ExamTester::from(&args);
 
-    println!("Using base directory: {:?}", exam_info.base_dir());
-
-    let exam_tester = ExamTester::new(exam_info);
-
-    if args.verbose() {
-        println!("ExamInfo Summary:");
+    if exam_tester.verbose() {
         exam_tester.print_info();
     }
 
-    if args.dry_run() {
+    if exam_tester.dry_run() {
         return;
     }
 

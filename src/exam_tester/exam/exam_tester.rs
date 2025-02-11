@@ -3,11 +3,17 @@ use crate::exam_tester::process::GoRunner;
 
 pub struct ExamTester {
     exam_info: ExamInfo,
+    verbose: bool,
+    dry_run: bool,
 }
 
 impl ExamTester {
-    pub fn new(exam_info: ExamInfo) -> Self {
-        Self { exam_info }
+    pub fn new(exam_info: ExamInfo, verbose: bool, dry_run: bool) -> Self {
+        Self {
+            exam_info,
+            verbose: verbose,
+            dry_run: dry_run,
+        }
     }
 
     /// Copies the submissions into the grading directory.
@@ -77,6 +83,17 @@ impl ExamTester {
                 crate::filesystem::append_to_file(&source_file, &grading_message);
             }
         }
+    }
+
+    /// Returns whether verbose mode is enabled.
+    /// Verbose mode is automatically enabled in dry run mode.
+    pub fn verbose(&self) -> bool {
+        self.dry_run() || self.verbose
+    }
+
+    /// Returns whether dry run mode is enabled.
+    pub fn dry_run(&self) -> bool {
+        self.dry_run
     }
 
     /// Prints a summary of the exam info to the console.

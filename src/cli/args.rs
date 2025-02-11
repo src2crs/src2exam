@@ -1,7 +1,7 @@
 use clap::Parser;
 use std::path::PathBuf;
 
-use crate::exam_tester::exam::{ExamInfo, ExamInfoLanguage};
+use crate::exam_tester::exam::{ExamInfo, ExamInfoLanguage, ExamTester};
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -44,13 +44,12 @@ impl Args {
         exam_info
     }
 
-    /// Returns whether the verbose mode is enabled.
-    /// Verbose mode is automatically enabled in dry run mode.
+    /// Returns whether the verbose mode option is set.
     pub fn verbose(&self) -> bool {
-        self.dry_run || self.verbose
+        self.verbose
     }
 
-    /// Returns whether the dry run mode is enabled.
+    /// Returns whether the dry run mode option is set.
     pub fn dry_run(&self) -> bool {
         self.dry_run
     }
@@ -58,12 +57,25 @@ impl Args {
 
 impl From<Args> for ExamInfo {
     fn from(args: Args) -> Self {
-        args.exam_info()
+        ExamInfo::from(&args)
     }
 }
 
 impl From<&Args> for ExamInfo {
     fn from(args: &Args) -> Self {
         args.exam_info()
+    }
+}
+
+impl From<Args> for ExamTester {
+    fn from(args: Args) -> Self {
+        ExamTester::from(&args)
+    }
+}
+
+impl From<&Args> for ExamTester {
+    fn from(args: &Args) -> Self {
+        let exam_info = ExamInfo::from(args);
+        ExamTester::new(exam_info, args.verbose(), args.dry_run())
     }
 }
