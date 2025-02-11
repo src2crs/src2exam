@@ -35,3 +35,9 @@ impl Args {
         exam_info
     }
 }
+
+impl From<Args> for ExamInfo {
+    fn from(args: Args) -> Self {
+        args.exam_info()
+    }
+}
