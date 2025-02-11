@@ -47,17 +47,17 @@ impl ExamTester {
         let task_names = self.exam_info.task_names().unwrap();
         let student_names = self.exam_info.student_names().unwrap();
 
-        for task_name in &task_names {
-            let task_dir = tasks_dir.join(task_name);
-            let test_files = crate::filesystem::files_with_suffix(&task_dir, "_test.go").unwrap();
+        for student_name in &student_names {
+            let student_dir = grading_dir.join(student_name);
+            println!("Copying tests for student: {}", student_name);
 
-            println!("Copying tests for task: {}", task_name);
+            for task_name in &task_names {
+                println!("  task: {}", task_name);
+                let task_dir = tasks_dir.join(task_name);
+                let test_files =
+                    crate::filesystem::files_with_suffix(&task_dir, "_test.go").unwrap();
 
-            for student_name in &student_names {
-                let student_dir = grading_dir.join(student_name);
                 let student_task_dir = student_dir.join(task_name);
-
-                println!("  Student: {}", student_name);
 
                 if !self.dry_run() {
                     crate::filesystem::copy_files(&test_files, &task_dir, &student_task_dir);
