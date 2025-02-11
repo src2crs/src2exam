@@ -1,10 +1,11 @@
+use clap::ValueEnum;
 use std::path::PathBuf;
 use std::time::Duration;
 
 /// Provides default values for ExamInfo struct
 /// for different languages.
 /// Uses `En` as the default language.
-#[derive(Debug)]
+#[derive(Debug, ValueEnum, Clone)]
 pub enum ExamInfoLanguage {
     En,
     De,
