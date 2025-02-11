@@ -13,7 +13,7 @@ pub struct Args {
     #[arg(short, long, default_value = ExamInfo::test_timeout_default().as_secs().to_string())]
     timeout: u64,
     /// The language to use for the exam.
-    #[arg(short, long, default_value = "en")]
+    #[arg(short, long, default_value = "de")]
     language: ExamInfoLanguage,
     /// Print information about the exam.
     #[arg(short, long)]
@@ -38,7 +38,7 @@ impl Args {
 
     /// Returns an exam info based on the arguments.
     pub fn exam_info(&self) -> ExamInfo {
-        let mut exam_info = ExamInfo::new_de();
+        let mut exam_info = ExamInfo::new(self.language());
         exam_info.set_base_dir(self.base_dir());
         exam_info.set_test_timeout(self.timeout);
         exam_info
@@ -52,6 +52,11 @@ impl Args {
     /// Returns whether the dry run mode option is set.
     pub fn dry_run(&self) -> bool {
         self.dry_run
+    }
+
+    /// Returns the language to use for the exam.
+    pub fn language(&self) -> ExamInfoLanguage {
+        self.language.clone()
     }
 }
 
