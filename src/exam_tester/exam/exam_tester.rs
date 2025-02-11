@@ -78,4 +78,10 @@ impl ExamTester {
             }
         }
     }
+
+    /// Prints a summary of the exam info to the console.
+    pub fn print_info(&self) {
+        println!("Exam Summary:");
+        println!("{}", self.exam_info.summary());
+    }
 }

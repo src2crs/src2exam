@@ -15,6 +15,12 @@ pub struct Args {
     /// The language to use for the exam.
     #[arg(short, long, default_value = "en")]
     language: ExamInfoLanguage,
+    /// Print information about the exam.
+    #[arg(short, long)]
+    verbose: bool,
+    /// Only print information about the exam and exit.
+    #[arg(short = 'n', long)]
+    dry_run: bool,
 }
 
 impl Args {
@@ -37,10 +43,27 @@ impl Args {
         exam_info.set_test_timeout(self.timeout);
         exam_info
     }
+
+    /// Returns whether the verbose mode is enabled.
+    /// Verbose mode is automatically enabled in dry run mode.
+    pub fn verbose(&self) -> bool {
+        self.dry_run || self.verbose
+    }
+
+    /// Returns whether the dry run mode is enabled.
+    pub fn dry_run(&self) -> bool {
+        self.dry_run
+    }
 }
 
 impl From<Args> for ExamInfo {
     fn from(args: Args) -> Self {
+        args.exam_info()
+    }
+}
+
+impl From<&Args> for ExamInfo {
+    fn from(args: &Args) -> Self {
         args.exam_info()
     }
 }
