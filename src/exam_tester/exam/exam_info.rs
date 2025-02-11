@@ -112,9 +112,16 @@ impl ExamInfo {
         Duration::from_secs(30)
     }
 
+    /// Returns the test timeout for the exam.
     pub fn test_timeout(&self) -> Duration {
         self.test_timeout
             .unwrap_or_else(|| Self::test_timeout_default())
+    }
+
+    /// Sets the test timeout for the exam.
+    /// The timeout is specified in seconds.
+    pub fn set_test_timeout(&mut self, timeout: u64) {
+        self.test_timeout = Some(Duration::from_secs(timeout));
     }
 }
 
