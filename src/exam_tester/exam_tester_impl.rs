@@ -1,14 +1,14 @@
-use crate::exam_tester::exam::ExamInfo;
-use crate::exam_tester::process::GoRunner;
+use crate::test_runners::GoRunner;
+use crate::ExamConfig;
 
 pub struct ExamTester {
-    exam_info: ExamInfo,
+    exam_info: ExamConfig,
     verbose: bool,
     dry_run: bool,
 }
 
 impl ExamTester {
-    pub fn new(exam_info: ExamInfo, verbose: bool, dry_run: bool) -> Self {
+    pub fn new(exam_info: ExamConfig, verbose: bool, dry_run: bool) -> Self {
         Self {
             exam_info,
             verbose,

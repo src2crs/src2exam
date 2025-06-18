@@ -1,5 +1,5 @@
 use src2exam::cli::Args;
-use src2exam::exam_tester::exam::ExamTester;
+use src2exam::ExamTester;
 
 use clap::Parser;
 

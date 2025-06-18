@@ -1,4 +1,4 @@
-use crate::exam_tester::exam::TestResult;
+use crate::TestResult;
 use std::path::PathBuf;
 use std::process::{Command, Output};
 use std::time::Duration;

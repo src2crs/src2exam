@@ -1,7 +1,8 @@
 use clap::Parser;
 use std::path::PathBuf;
 
-use crate::exam_tester::exam::{ExamInfo, ExamInfoLanguage, ExamTester};
+use super::Language;
+use crate::{ExamConfig, ExamTester};
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -10,11 +11,11 @@ pub struct Args {
     #[arg(short, long, default_value = ".")]
     directory: PathBuf,
     /// The timeout for running the tests in seconds.
-    #[arg(short, long, default_value = ExamInfo::test_timeout_default().as_secs().to_string())]
+    #[arg(short, long, default_value = ExamConfig::test_timeout_default().as_secs().to_string())]
     timeout: u64,
     /// The language to use for the exam.
     #[arg(short, long, default_value = "de")]
-    language: ExamInfoLanguage,
+    language: Language,
     /// Print information about the exam.
     #[arg(short, long)]
     verbose: bool,
@@ -36,12 +37,12 @@ impl Args {
         }
     }
 
-    /// Returns an exam info based on the arguments.
-    pub fn exam_info(&self) -> ExamInfo {
-        let mut exam_info = ExamInfo::new(self.language());
-        exam_info.set_base_dir(self.base_dir());
-        exam_info.set_test_timeout(self.timeout);
-        exam_info
+    /// Returns an exam config based on the arguments.
+    pub fn exam_config(&self) -> ExamConfig {
+        let exam_config = ExamConfig::from(self.language())
+            .with_base_dir(self.base_dir())
+            .with_test_timeout(std::time::Duration::from_secs(self.timeout));
+        exam_config
     }
 
     /// Returns whether the verbose mode option is set.
@@ -55,20 +56,20 @@ impl Args {
     }
 
     /// Returns the language to use for the exam.
-    pub fn language(&self) -> ExamInfoLanguage {
+    pub fn language(&self) -> Language {
         self.language.clone()
     }
 }
 
-impl From<Args> for ExamInfo {
+impl From<Args> for ExamConfig {
     fn from(args: Args) -> Self {
-        ExamInfo::from(&args)
+        ExamConfig::from(&args)
     }
 }
 
-impl From<&Args> for ExamInfo {
+impl From<&Args> for ExamConfig {
     fn from(args: &Args) -> Self {
-        args.exam_info()
+        args.exam_config()
     }
 }
 
@@ -80,7 +81,7 @@ impl From<Args> for ExamTester {
 
 impl From<&Args> for ExamTester {
     fn from(args: &Args) -> Self {
-        let exam_info = ExamInfo::from(args);
+        let exam_info = ExamConfig::from(args);
         ExamTester::new(exam_info, args.verbose(), args.dry_run())
     }
 }
