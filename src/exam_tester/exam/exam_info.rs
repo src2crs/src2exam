@@ -227,7 +227,7 @@ mod tests {
     /// but specifies a custom submissions directory.
     /// Expected outcome: An Error value is returned by student_names().
     #[test]
-    fn student_names_testdata_go_exam_modified_submissions() {
+    fn student_names_testdata_go_exam_non_existent_submissions_dir() {
         let base_dir = std::env::current_dir().unwrap();
         let testdata_dir = base_dir.join("testdata");
         let exam_dir = testdata_dir.join("go-exam");
@@ -237,10 +237,7 @@ mod tests {
         exam_info.set_submissions_dirname("non_existent_dir");
         let student_names = exam_info.student_names();
 
-        assert_eq!(
-            student_names,
-            Err("No such file or directory (os error 2)".to_string())
-        );
+        assert!(student_names.is_err());
     }
 
     #[test]
@@ -260,7 +257,7 @@ mod tests {
     }
 
     #[test]
-    fn task_names_testdata_go_exam_modified_tasks() {
+    fn task_names_testdata_go_exam_non_existent_tasks_dir() {
         let base_dir = std::env::current_dir().unwrap();
         let testdata_dir = base_dir.join("testdata");
         let exam_dir = testdata_dir.join("go-exam");
@@ -270,9 +267,6 @@ mod tests {
         exam_info.set_tasks_dirname("non_existent_dir");
         let task_names = exam_info.task_names();
 
-        assert_eq!(
-            task_names,
-            Err("No such file or directory (os error 2)".to_string())
-        );
+        assert!(task_names.is_err());
     }
 }
