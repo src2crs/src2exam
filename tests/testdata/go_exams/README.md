@@ -1,7 +1,7 @@
 # Example: Go Exams
 
 These are fictitious example exams using the Go programming language.
-They are created for english and german and consist of several parts:
+They consist of several parts:
 
 * tasks with solutions
 * tests to be delivered with the assignments

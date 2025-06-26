@@ -1,9 +1,6 @@
 use clap::Parser;
 use std::path::PathBuf;
 
-mod lang;
-use lang::Language;
-
 use crate::cli::CliError;
 type Result<T> = std::result::Result<T, CliError>;
 
@@ -16,9 +13,6 @@ pub struct Args {
     /// The timeout for running the tests in seconds.
     #[arg(short, long, default_value = Self::default_timeout_str())]
     timeout: u64,
-    /// The language to use for the exam.
-    #[arg(short, long, default_value = Self::default_lang_str())]
-    language: String,
     /// Print information about the exam.
     #[arg(short, long)]
     verbose: bool,
@@ -43,14 +37,6 @@ impl Args {
 
     pub fn default_timeout() -> u64 {
         Self::default_timeout_str().parse().unwrap()
-    }
-
-    pub fn default_lang_str() -> &'static str {
-        "auto"
-    }
-
-    pub fn default_lang() -> Language {
-        Self::default_lang_str().into()
     }
 }
 

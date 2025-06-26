@@ -5,16 +5,14 @@ use std::path::PathBuf;
 /// Constructors
 impl Args {
     /// Creates a new Args instance from the given values.
-    pub fn new<P, T, L>(directory: P, timeout: T, language: L, verbose: bool, dry_run: bool) -> Self
+    pub fn new<P, T>(directory: P, timeout: T, verbose: bool, dry_run: bool) -> Self
     where
         P: Into<PathBuf>,
         T: Into<u64>,
-        L: Into<String>,
     {
         Self {
             directory: directory.into(),
             timeout: timeout.into(),
-            language: language.into(),
             verbose,
             dry_run,
         }
@@ -23,12 +21,6 @@ impl Args {
 
 impl Default for Args {
     fn default() -> Self {
-        Self::new(
-            Self::default_path(),
-            Self::default_timeout(),
-            Self::default_lang_str(),
-            false,
-            false,
-        )
+        Self::new(Self::default_path(), Self::default_timeout(), false, false)
     }
 }

@@ -1,9 +1,6 @@
 use super::{Args, Result};
 
-use crate::{
-    cli::{args::lang::Language, CliError},
-    ExamConfig, ExamTester,
-};
+use crate::{cli::CliError, ExamConfig, ExamTester};
 use std::path::PathBuf;
 
 /// Access
@@ -25,7 +22,7 @@ impl Args {
 
     /// Returns an exam config based on the arguments.
     pub fn exam_config(&self) -> Result<ExamConfig> {
-        let exam_config = ExamConfig::from(self.language())
+        let exam_config = ExamConfig::default()
             .with_base_dir(self.base_dir()?)
             .with_test_timeout(std::time::Duration::from_secs(self.timeout));
         Ok(exam_config)
@@ -48,10 +45,5 @@ impl Args {
     /// Returns whether the dry run mode option is set.
     pub fn dry_run(&self) -> bool {
         self.dry_run
-    }
-
-    /// Returns the language to use for the exam.
-    pub fn language(&self) -> Language {
-        Language::from_base_dir_or_str(self.base_dir().unwrap_or_default(), &self.language)
     }
 }

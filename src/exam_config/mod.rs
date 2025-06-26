@@ -77,9 +77,9 @@ impl Default for ExamConfig {
     fn default() -> Self {
         Self {
             base_dir: PathBuf::from("."),
-            tasks_dirname: "".into(),
-            submissions_dirname: "".into(),
-            grading_dirname: "".into(),
+            tasks_dirname: "tasks".into(),
+            submissions_dirname: "submissions".into(),
+            grading_dirname: "grading".into(),
             test_timeout: Duration::from_secs(5),
         }
     }
