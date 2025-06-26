@@ -18,7 +18,7 @@ pub struct Args {
     timeout: u64,
     /// The language to use for the exam.
     #[arg(short, long, default_value = Self::default_lang_str())]
-    language: Language,
+    language: String,
     /// Print information about the exam.
     #[arg(short, long)]
     verbose: bool,
@@ -46,7 +46,7 @@ impl Args {
     }
 
     pub fn default_lang_str() -> &'static str {
-        Language::De.as_str()
+        "auto"
     }
 
     pub fn default_lang() -> Language {

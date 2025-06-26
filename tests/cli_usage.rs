@@ -6,10 +6,12 @@ use src2exam::cli::Args;
 
 #[test]
 fn go_exam_de_dirs() {
+    let lang = GoExamDe;
+
     let args = Args::parse_from([
         "src2exam",
         "--directory",
-        &GoExamDe.dir_str(),
+        &lang.dir_str(),
         "--language",
         "de",
         "--timeout",
@@ -21,7 +23,7 @@ fn go_exam_de_dirs() {
     let exam_tester = args.exam_tester().unwrap();
     let exam_config = exam_tester.exam_config();
 
-    let exam_dir = GoExamDe.dir().canonicalize().unwrap();
+    let exam_dir = lang.dir().canonicalize().unwrap();
     assert_eq!(exam_config.base_dir(), exam_dir);
     assert_eq!(exam_config.tasks_dir(), exam_dir.join("aufgaben"));
     assert_eq!(exam_config.grading_dir(), exam_dir.join("bewertung"));
@@ -35,11 +37,29 @@ fn go_exam_de_dirs() {
 }
 
 #[test]
+fn go_exam_de_dirs_guessed_language() {
+    let lang = GoExamDe;
+
+    let args = Args::parse_from(["src2exam", "--directory", &lang.dir_str()]);
+
+    let exam_tester = args.exam_tester().unwrap();
+    let exam_config = exam_tester.exam_config();
+
+    let exam_dir = lang.dir().canonicalize().unwrap();
+    assert_eq!(exam_config.base_dir(), exam_dir);
+    assert_eq!(exam_config.tasks_dir(), exam_dir.join("aufgaben"));
+    assert_eq!(exam_config.grading_dir(), exam_dir.join("bewertung"));
+    assert_eq!(exam_config.submissions_dir(), exam_dir.join("abgaben"));
+}
+
+#[test]
 fn go_exam_en_dirs() {
+    let lang = GoExamEn;
+
     let args = Args::parse_from([
         "src2exam",
         "--directory",
-        &GoExamEn.dir_str(),
+        &lang.dir_str(),
         "--language",
         "en",
         "--timeout",
@@ -51,7 +71,7 @@ fn go_exam_en_dirs() {
     let exam_tester = args.exam_tester().unwrap();
     let exam_config = exam_tester.exam_config();
 
-    let exam_dir = GoExamEn.dir().canonicalize().unwrap();
+    let exam_dir = lang.dir().canonicalize().unwrap();
     assert_eq!(exam_config.base_dir(), exam_dir);
     assert_eq!(exam_config.tasks_dir(), exam_dir.join("tasks"));
     assert_eq!(exam_config.grading_dir(), exam_dir.join("grading"));
@@ -62,4 +82,20 @@ fn go_exam_en_dirs() {
     );
     assert_eq!(exam_tester.verbose(), true);
     assert_eq!(exam_tester.dry_run(), true);
+}
+
+#[test]
+fn go_exam_en_dirs_guessed_language() {
+    let lang = GoExamEn;
+
+    let args = Args::parse_from(["src2exam", "--directory", &lang.dir_str()]);
+
+    let exam_tester = args.exam_tester().unwrap();
+    let exam_config = exam_tester.exam_config();
+
+    let exam_dir = lang.dir().canonicalize().unwrap();
+    assert_eq!(exam_config.base_dir(), exam_dir);
+    assert_eq!(exam_config.tasks_dir(), exam_dir.join("tasks"));
+    assert_eq!(exam_config.grading_dir(), exam_dir.join("grading"));
+    assert_eq!(exam_config.submissions_dir(), exam_dir.join("submissions"));
 }

@@ -52,6 +52,6 @@ impl Args {
 
     /// Returns the language to use for the exam.
     pub fn language(&self) -> Language {
-        self.language.clone()
+        Language::from_base_dir_or_str(self.base_dir().unwrap_or_default(), &self.language)
     }
 }

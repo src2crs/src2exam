@@ -1,4 +1,5 @@
 use super::*;
+use crate::cli::args::lang::Language;
 use std::time::Duration;
 
 #[test]
@@ -7,7 +8,7 @@ fn values_for_default_struct() {
 
     assert_eq!(args.directory, Args::default_path());
     assert_eq!(args.timeout, Args::default_timeout());
-    assert_eq!(args.language, Args::default_lang());
+    assert_eq!(args.language(), Args::default_lang());
     assert!(!args.verbose);
     assert!(!args.dry_run);
 
@@ -23,7 +24,7 @@ fn values_for_custom_struct() {
 
     assert_eq!(args.directory, PathBuf::from("base_dir"));
     assert_eq!(args.timeout, 5);
-    assert_eq!(args.language, Language::De);
+    assert_eq!(args.language(), Language::De);
     assert!(args.verbose);
     assert!(!args.dry_run);
 
@@ -65,5 +66,5 @@ fn exam_config_for_custom_struct() {
 
 #[test]
 fn default_lang_str_matches_language_default() {
-    assert_eq!(Args::default_lang_str(), Language::default().as_str());
+    assert_eq!(Args::default_lang(), Language::default());
 }

@@ -1,6 +1,5 @@
 use super::Args;
 
-use crate::cli::args::lang::Language;
 use std::path::PathBuf;
 
 /// Constructors
@@ -10,7 +9,7 @@ impl Args {
     where
         P: Into<PathBuf>,
         T: Into<u64>,
-        L: Into<Language>,
+        L: Into<String>,
     {
         Self {
             directory: directory.into(),
@@ -27,7 +26,7 @@ impl Default for Args {
         Self::new(
             Self::default_path(),
             Self::default_timeout(),
-            Self::default_lang(),
+            Self::default_lang_str(),
             false,
             false,
         )
