@@ -2,7 +2,7 @@ use crate::test_runners::GoRunner;
 use crate::ExamConfig;
 
 pub struct ExamTester {
-    exam_info: ExamConfig,
+    exam_config: ExamConfig,
     verbose: bool,
     dry_run: bool,
 }
@@ -10,7 +10,7 @@ pub struct ExamTester {
 impl ExamTester {
     pub fn new(exam_info: ExamConfig, verbose: bool, dry_run: bool) -> Self {
         Self {
-            exam_info,
+            exam_config: exam_info,
             verbose,
             dry_run,
         }
@@ -18,8 +18,8 @@ impl ExamTester {
 
     /// Copies the submissions into the grading directory.
     pub fn copy_submissions(&self) {
-        let submissions_dir = self.exam_info.submissions_dir();
-        let grading_dir = self.exam_info.grading_dir();
+        let submissions_dir = self.exam_config.submissions_dir();
+        let grading_dir = self.exam_config.grading_dir();
 
         println!(
             "Copying submissions from {:?} to {:?}",
@@ -41,11 +41,11 @@ impl ExamTester {
     ///   (based on the student names reported by the exam info).
     /// * Will not create or copy any other directories or files.
     pub fn copy_tests(&self) {
-        let tasks_dir = self.exam_info.tasks_dir();
-        let grading_dir = self.exam_info.grading_dir();
+        let tasks_dir = self.exam_config.tasks_dir();
+        let grading_dir = self.exam_config.grading_dir();
 
-        let task_names = self.exam_info.task_names().unwrap();
-        let student_names = self.exam_info.student_names().unwrap();
+        let task_names = self.exam_config.task_names().unwrap();
+        let student_names = self.exam_config.student_names().unwrap();
 
         for student_name in &student_names {
             let student_dir = grading_dir.join(student_name);
@@ -76,9 +76,9 @@ impl ExamTester {
     /// A short summary of the result is appended to the corresponding source file.
     /// The filename is assumed to be the task name with the `.go` extension.
     pub fn run_tests(&self) {
-        let grading_dir = self.exam_info.grading_dir();
-        let student_names = self.exam_info.student_names().unwrap();
-        let task_names = self.exam_info.task_names().unwrap();
+        let grading_dir = self.exam_config.grading_dir();
+        let student_names = self.exam_config.student_names().unwrap();
+        let task_names = self.exam_config.task_names().unwrap();
 
         for student_name in &student_names {
             println!("Running tests for student: {}", student_name);
@@ -89,7 +89,7 @@ impl ExamTester {
                 if self.dry_run() {
                     print!("(dry run)");
                 } else {
-                    let runner = GoRunner::new(&student_task_dir, self.exam_info.test_timeout());
+                    let runner = GoRunner::new(&student_task_dir, self.exam_config.test_timeout());
                     let test_result = runner.run_tests();
 
                     let result_message = test_result.to_string_de();
@@ -116,11 +116,16 @@ impl ExamTester {
         self.dry_run
     }
 
+    /// Returns the exam configuration.
+    pub fn exam_config(&self) -> ExamConfig {
+        self.exam_config.clone()
+    }
+
     /// Prints info about what is happening.
     pub fn print_info(&self) {
-        println!("Running in directory: {:?}", self.exam_info.base_dir());
+        println!("Running in directory: {:?}", self.exam_config.base_dir());
         if self.verbose() {
-            println!("{}", self.exam_info.summary());
+            println!("{}", self.exam_config.summary());
         }
 
         if self.dry_run() {

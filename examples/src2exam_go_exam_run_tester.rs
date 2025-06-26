@@ -1,12 +1,14 @@
 // Note: This must be run from the project root directory to get the directories right.
 
+use clap::Parser;
 use src2exam::cli::Args;
 
 mod common;
-use common::exam_dir;
+use common::go_exam_dir_str;
 
 fn main() {
-    let args = Args::new(exam_dir(), 30u64, "de", false, false);
+    let args = Args::parse_from(["src2exam", "--directory", &go_exam_dir_str()]);
+
     let exam_tester = args.exam_tester().unwrap();
 
     // Copying student submissions and tests to the grading directory.

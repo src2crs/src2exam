@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 use std::time::Duration;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct ExamConfig {
     base_dir: PathBuf,
     tasks_dirname: String,
@@ -84,6 +84,3 @@ impl Default for ExamConfig {
         }
     }
 }
-
-#[cfg(test)]
-mod tests;
