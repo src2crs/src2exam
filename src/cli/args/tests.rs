@@ -26,6 +26,8 @@ fn values_for_custom_struct() {
         5u64,
         true,
         false,
+        None,
+        false,
     );
 
     assert_eq!(args.base_directory, PathBuf::from("base_dir"));
@@ -70,6 +72,8 @@ fn exam_config_for_custom_struct() {
         60u64,
         true,
         true,
+        None,
+        false,
     );
 
     let expected_base_dir = PathBuf::from("custom_base_dir");

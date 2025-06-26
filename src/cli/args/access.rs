@@ -27,9 +27,51 @@ impl Args {
             .with_test_timeout(std::time::Duration::from_secs(self.timeout))
     }
 
+    /// Returns an exam config from the config file path if that is set
+    /// and the file contains a valid configuration.
+    pub fn config_from_file(&self) -> Option<ExamConfig> {
+        let path = self.config_path()?;
+        if !path.exists() {
+            return None;
+        }
+
+        let file_content = std::fs::read_to_string(&path).ok()?;
+        ExamConfig::from_toml(&file_content).ok()
+    }
+
+    /// Writes the exam configuration to config file path
+    /// if the path is set and the option to create the config is enabled.
+    /// If the path is not set, will log an error.
+    pub fn write_config_to_file(&self) {
+        if !self.create_config {
+            return;
+        }
+        match &self.config_path {
+            // TODO: Replace eprintln! with a proper logging mechanism.
+            Some(path) => {
+                std::fs::create_dir_all(path.parent().unwrap()).ok();
+                let exam_config = self.exam_config();
+                if let Ok(exam_config_toml) = exam_config.to_toml() {
+                    std::fs::write(path, exam_config_toml)
+                        .unwrap_or_else(|_| eprintln!("Error: Could not write to file {:?}", path));
+                } else {
+                    eprintln!("Error: Could not convert exam configuration to TOML.");
+                }
+            }
+            None => {
+                eprintln!("Error: No configuration file path specified.");
+            }
+        }
+    }
+
     /// Returns an exam tester based on the arguments.
     pub fn exam_tester(&self) -> ExamTester {
-        ExamTester::new(self.exam_config(), self.verbose(), self.dry_run())
+        let exam_config = match self.config_from_file() {
+            Some(config) => config,
+            None => self.exam_config(),
+        };
+
+        ExamTester::new(exam_config, self.verbose(), self.dry_run())
     }
 
     /// Returns whether the verbose mode option is set.
@@ -40,5 +82,10 @@ impl Args {
     /// Returns whether the dry run mode option is set.
     pub fn dry_run(&self) -> bool {
         self.dry_run
+    }
+
+    /// Returns the path to the configuration file, if any.
+    pub fn config_path(&self) -> Option<PathBuf> {
+        self.config_path.clone()
     }
 }

@@ -15,6 +15,8 @@ fn exam_config_dirs_en() {
         30u64,
         false,
         false,
+        None,
+        false,
     );
     let exam_config = args.exam_config();
 
@@ -36,6 +38,8 @@ fn exam_config_dirs_de() {
         30u64,
         false,
         false,
+        None,
+        false,
     );
     let exam_config = args.exam_config();
 
@@ -55,6 +59,8 @@ fn student_names_testdata_go_exam_en() {
         "grading",
         30u64,
         false,
+        false,
+        None,
         false,
     );
     let exam_config = args.exam_config();
@@ -78,6 +84,8 @@ fn student_names_testdata_go_exam_de() {
         30u64,
         false,
         false,
+        None,
+        false,
     );
     let exam_config = args.exam_config();
 
@@ -95,7 +103,17 @@ fn student_names_testdata_go_exam_de() {
 #[test]
 fn student_names_testdata_go_exam_non_existent_submissions_dir() {
     let exam_dir = GoExamDe.dir();
-    let args = Args::new(exam_dir.clone(), "---", "---", "---", 30u64, false, false);
+    let args = Args::new(
+        exam_dir.clone(),
+        "---",
+        "---",
+        "---",
+        30u64,
+        false,
+        false,
+        None,
+        false,
+    );
     let exam_config = args
         .exam_config()
         .with_submissions_subdir("non_existent_dir");
@@ -115,6 +133,8 @@ fn task_names_testdata_go_exam_en() {
         "grading",
         30u64,
         false,
+        false,
+        None,
         false,
     );
     let exam_config = args.exam_config();
@@ -138,6 +158,8 @@ fn task_names_testdata_go_exam_de() {
         30u64,
         false,
         false,
+        None,
+        false,
     );
     let exam_config = args.exam_config();
 
@@ -152,7 +174,17 @@ fn task_names_testdata_go_exam_de() {
 #[test]
 fn task_names_testdata_go_exam_non_existent_tasks_dir() {
     let exam_dir = GoExamDe.dir();
-    let args = Args::new(exam_dir.clone(), "---", "---", "---", 30u64, false, false);
+    let args = Args::new(
+        exam_dir.clone(),
+        "---",
+        "---",
+        "---",
+        30u64,
+        false,
+        false,
+        None,
+        false,
+    );
     let exam_config = args.exam_config().with_tasks_subdir("non_existent_dir");
     let task_names = exam_config.task_names();
 

@@ -1,7 +1,8 @@
+use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::time::Duration;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ExamConfig {
     base_dir: PathBuf,
     tasks_dirname: String,
@@ -11,6 +12,7 @@ pub struct ExamConfig {
 }
 
 mod constructors;
+mod conversions;
 mod defaults;
 mod dir_getters;
 

@@ -26,6 +26,14 @@ pub struct Args {
     /// Only print information about the exam and exit.
     #[arg(short = 'n', long)]
     dry_run: bool,
+    /// The path to the file containing the exam configuration.
+    /// If it exists, it will be used and all other CLI arguments will be ignored.
+    #[arg(short, long)]
+    config_path: Option<PathBuf>,
+    /// If set, a new config file will be created with the default values.
+    /// The name of the file will be determined by the `config_path` argument.
+    #[arg(long)]
+    create_config: bool,
 }
 
 mod access;
