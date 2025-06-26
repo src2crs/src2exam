@@ -18,7 +18,7 @@ fn go_exam_en_dirs() {
         "--dry-run",
     ]);
 
-    let exam_tester = args.exam_tester().unwrap();
+    let exam_tester = args.exam_tester();
     let exam_config = exam_tester.exam_config();
 
     let exam_dir = lang.dir().canonicalize().unwrap();
@@ -40,7 +40,7 @@ fn go_exam_en_dirs_guessed_language() {
 
     let args = Args::parse_from(["src2exam", "--directory", &lang.dir_str()]);
 
-    let exam_tester = args.exam_tester().unwrap();
+    let exam_tester = args.exam_tester();
     let exam_config = exam_tester.exam_config();
 
     let exam_dir = lang.dir().canonicalize().unwrap();

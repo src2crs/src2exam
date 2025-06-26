@@ -9,7 +9,7 @@ use common::go_exam_dir_str;
 fn main() {
     let args = Args::parse_from(["src2exam", "--directory", &go_exam_dir_str()]);
 
-    let exam_config = args.exam_config().unwrap();
+    let exam_config = args.exam_config();
 
     println!("ExamConfig for the example Go exam:");
     println!("{}", exam_config.summary());

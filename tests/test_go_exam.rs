@@ -12,7 +12,7 @@ fn exam_config_dirs_en() {
     let exam_dir = GoExamEn.dir();
 
     let args = Args::new(exam_dir.clone(), 30u64, false, false);
-    let exam_config = args.exam_config().unwrap();
+    let exam_config = args.exam_config();
 
     assert_eq!(exam_config.base_dir(), exam_dir.canonicalize().unwrap());
     assert_eq!(exam_config.tasks_dir(), exam_dir.join("tasks"));
@@ -24,7 +24,7 @@ fn exam_config_dirs_en() {
 fn student_names_testdata_go_exam_en() {
     let exam_dir = GoExamEn.dir();
     let args = Args::new(exam_dir.clone(), 30u64, false, false);
-    let exam_config = args.exam_config().unwrap();
+    let exam_config = args.exam_config();
 
     let student_names = exam_config.student_names().unwrap();
 
@@ -43,7 +43,6 @@ fn student_names_testdata_go_exam_non_existent_submissions_dir() {
     let args = Args::new(exam_dir.clone(), 30u64, false, false);
     let exam_config = args
         .exam_config()
-        .unwrap()
         .with_submissions_subdir("non_existent_dir");
 
     let student_names = exam_config.student_names();
@@ -55,7 +54,7 @@ fn student_names_testdata_go_exam_non_existent_submissions_dir() {
 fn task_names_testdata_go_exam_en() {
     let exam_dir = GoExamEn.dir();
     let args = Args::new(exam_dir.clone(), 30u64, false, false);
-    let exam_config = args.exam_config().unwrap();
+    let exam_config = args.exam_config();
 
     let task_names = exam_config.task_names().unwrap();
 
@@ -69,10 +68,7 @@ fn task_names_testdata_go_exam_en() {
 fn task_names_testdata_go_exam_non_existent_tasks_dir() {
     let exam_dir = GoExamDe.dir();
     let args = Args::new(exam_dir.clone(), 30u64, false, false);
-    let exam_config = args
-        .exam_config()
-        .unwrap()
-        .with_tasks_subdir("non_existent_dir");
+    let exam_config = args.exam_config().with_tasks_subdir("non_existent_dir");
     let task_names = exam_config.task_names();
 
     assert!(task_names.is_err());

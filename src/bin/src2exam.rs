@@ -4,13 +4,7 @@ use clap::Parser;
 
 fn main() {
     let args = Args::parse();
-    let exam_tester = match args.exam_tester() {
-        Ok(tester) => tester,
-        Err(e) => {
-            eprintln!("Error initializing exam tester: {}", e);
-            return;
-        }
-    };
+    let exam_tester = args.exam_tester();
 
     exam_tester.copy_submissions();
     exam_tester.copy_tests();

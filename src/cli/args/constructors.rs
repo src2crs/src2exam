@@ -1,3 +1,5 @@
+use crate::ExamConfig;
+
 use super::Args;
 
 use std::path::PathBuf;
@@ -21,6 +23,11 @@ impl Args {
 
 impl Default for Args {
     fn default() -> Self {
-        Self::new(Self::default_path(), Self::default_timeout(), false, false)
+        Self::new(
+            ExamConfig::default_base_dirname(),
+            ExamConfig::default_timeout_secs(),
+            false,
+            false,
+        )
     }
 }

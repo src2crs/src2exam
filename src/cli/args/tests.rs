@@ -1,19 +1,19 @@
 use super::*;
+use crate::ExamConfig;
 use std::time::Duration;
 
 #[test]
 fn values_for_default_struct() {
     let args = Args::default();
 
-    assert_eq!(args.directory, Args::default_path());
-    assert_eq!(args.timeout, Args::default_timeout());
+    assert_eq!(args.exam_config(), ExamConfig::default());
+
+    assert_eq!(args.directory, ExamConfig::default_base_dir());
+    assert_eq!(args.timeout, ExamConfig::default_timeout_secs());
     assert!(!args.verbose);
     assert!(!args.dry_run);
 
-    assert_eq!(
-        args.base_dir(),
-        Ok(Args::default_path().canonicalize().unwrap())
-    );
+    assert_eq!(args.base_dir(), ExamConfig::default_base_dir());
 }
 
 #[test]
@@ -25,36 +25,45 @@ fn values_for_custom_struct() {
     assert!(args.verbose);
     assert!(!args.dry_run);
 
-    assert_eq!(
-        args.base_dir(),
-        Ok(std::env::current_dir().unwrap().join("base_dir"))
-    );
+    assert_eq!(args.base_dir(), PathBuf::from("base_dir"));
 }
 
 #[test]
 fn exam_config_for_default_struct_() {
     let args = Args::default();
-    let exam_config = args.exam_config().unwrap();
+    let exam_config = args.exam_config();
 
-    let expected_base_dir = Args::default_path().canonicalize().unwrap();
-    let expected_timeout = Duration::from_secs(Args::default_timeout());
-
-    // TODO: Also test directories.
+    let expected_base_dir = ExamConfig::default_base_dir();
+    let expected_tasks_dir = expected_base_dir.join(ExamConfig::default_tasks_dirname());
+    let expected_grading_dir = expected_base_dir.join(ExamConfig::default_grading_dirname());
+    let expected_submissions_dir =
+        expected_base_dir.join(ExamConfig::default_submissions_dirname());
+    let expected_timeout = Duration::from_secs(ExamConfig::default_timeout_secs());
 
     assert_eq!(exam_config.base_dir(), expected_base_dir);
+    assert_eq!(exam_config.tasks_dir(), expected_tasks_dir);
+    assert_eq!(exam_config.grading_dir(), expected_grading_dir);
+    assert_eq!(exam_config.submissions_dir(), expected_submissions_dir);
     assert_eq!(exam_config.test_timeout(), expected_timeout);
 }
 
 #[test]
 fn exam_config_for_custom_struct() {
-    let args = Args::new("custom_base_dir", 60u64, true, true);
-    let exam_config = args.exam_config().unwrap();
+    // TODO: Also test subdirectory names.
 
-    let expected_base_dir = std::env::current_dir().unwrap().join("custom_base_dir");
+    let args = Args::new("custom_base_dir", 60u64, true, true);
+    let exam_config = args.exam_config();
+
+    let expected_base_dir = PathBuf::from("custom_base_dir");
+    let expected_tasks_dir = expected_base_dir.join(ExamConfig::default_tasks_dirname());
+    let expected_grading_dir = expected_base_dir.join(ExamConfig::default_grading_dirname());
+    let expected_submissions_dir =
+        expected_base_dir.join(ExamConfig::default_submissions_dirname());
     let expected_timeout = Duration::from_secs(60);
 
-    // TODO: Also test directories.
-
     assert_eq!(exam_config.base_dir(), expected_base_dir);
+    assert_eq!(exam_config.tasks_dir(), expected_tasks_dir);
+    assert_eq!(exam_config.grading_dir(), expected_grading_dir);
+    assert_eq!(exam_config.submissions_dir(), expected_submissions_dir);
     assert_eq!(exam_config.test_timeout(), expected_timeout);
 }

@@ -11,6 +11,7 @@ pub struct ExamConfig {
 }
 
 mod constructors;
+mod defaults;
 mod dir_getters;
 
 impl ExamConfig {
@@ -77,10 +78,10 @@ impl Default for ExamConfig {
     fn default() -> Self {
         Self {
             base_dir: PathBuf::from("."),
-            tasks_dirname: "tasks".into(),
-            submissions_dirname: "submissions".into(),
-            grading_dirname: "grading".into(),
-            test_timeout: Duration::from_secs(5),
+            tasks_dirname: Self::default_tasks_dirname(),
+            submissions_dirname: Self::default_submissions_dirname(),
+            grading_dirname: Self::default_grading_dirname(),
+            test_timeout: Self::default_timeout(),
         }
     }
 }
