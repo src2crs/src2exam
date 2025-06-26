@@ -9,7 +9,7 @@ impl Args {
     /// This is the stored directory if it is absolute,
     /// otherwise it is the stored directory relative to the current directory.
     pub fn base_dir(&self) -> PathBuf {
-        let base_dir = &self.directory;
+        let base_dir = &self.base_directory;
         if base_dir.is_relative() {
             PathBuf::default().join(base_dir)
         } else {
@@ -21,6 +21,9 @@ impl Args {
     pub fn exam_config(&self) -> ExamConfig {
         ExamConfig::default()
             .with_base_dir(self.base_dir())
+            .with_tasks_subdir(&self.tasks_dirname)
+            .with_submissions_subdir(&self.submissions_dirname)
+            .with_grading_subdir(&self.grading_dirname)
             .with_test_timeout(std::time::Duration::from_secs(self.timeout))
     }
 

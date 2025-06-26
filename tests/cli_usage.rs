@@ -10,7 +10,7 @@ fn go_exam_en_dirs() {
 
     let args = Args::parse_from([
         "src2exam",
-        "--directory",
+        "--base-directory",
         &lang.dir_str(),
         "--timeout",
         "15",
@@ -38,7 +38,7 @@ fn go_exam_en_dirs() {
 fn go_exam_en_dirs_guessed_language() {
     let lang = GoExamEn;
 
-    let args = Args::parse_from(["src2exam", "--directory", &lang.dir_str()]);
+    let args = Args::parse_from(["src2exam", "--base-directory", &lang.dir_str()]);
 
     let exam_tester = args.exam_tester();
     let exam_config = exam_tester.exam_config();
