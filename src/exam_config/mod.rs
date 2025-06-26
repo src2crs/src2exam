@@ -34,11 +34,6 @@ impl ExamConfig {
         Ok(tasks)
     }
 
-    /// Returns the default test timeout for the exam.
-    pub fn test_timeout_default() -> Duration {
-        Duration::from_secs(30)
-    }
-
     /// Returns the test timeout for the exam.
     pub fn test_timeout(&self) -> Duration {
         self.test_timeout

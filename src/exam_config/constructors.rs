@@ -40,6 +40,7 @@ impl ExamConfig {
     }
 
     /// Creates a new `ExamConfig` instance with german defaults.
+    /// TODO: Move this to the cli module.
     pub fn new_de() -> Self {
         Self::default()
             .with_tasks_subdir("aufgaben")
@@ -48,6 +49,7 @@ impl ExamConfig {
     }
 
     /// Creates a new `ExamConfig` instance with english defaults.
+    /// TODO: Move this to the cli module.
     pub fn new_en() -> Self {
         Self::default()
             .with_tasks_subdir("tasks")

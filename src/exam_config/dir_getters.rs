@@ -2,8 +2,8 @@ use super::*;
 
 impl ExamConfig {
     /// Returns the base directory of the exam.
-    pub fn base_dir(&self) -> &PathBuf {
-        &self.base_dir
+    pub fn base_dir(&self) -> PathBuf {
+        self.base_dir.clone()
     }
 
     /// Returns the path to the submissions directory.

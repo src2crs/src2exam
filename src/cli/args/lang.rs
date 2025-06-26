@@ -1,7 +1,8 @@
 use crate::ExamConfig;
 
-#[derive(Debug, Clone)]
+#[derive(Default, Debug, Clone, PartialEq)]
 pub enum Language {
+    #[default]
     De,
     En,
 }

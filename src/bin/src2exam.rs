@@ -1,11 +1,16 @@
 use src2exam::cli::Args;
-use src2exam::ExamTester;
 
 use clap::Parser;
 
 fn main() {
     let args = Args::parse();
-    let exam_tester = ExamTester::from(&args);
+    let exam_tester = match args.exam_tester() {
+        Ok(tester) => tester,
+        Err(e) => {
+            eprintln!("Error initializing exam tester: {}", e);
+            return;
+        }
+    };
 
     exam_tester.print_info();
 

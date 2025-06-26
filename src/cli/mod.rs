@@ -1,6 +1,5 @@
 mod args;
-mod lang;
+mod cli_error;
 
 pub use args::Args;
-
-use lang::Language;
+pub use cli_error::CliError;
