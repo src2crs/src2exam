@@ -7,7 +7,7 @@ fn main() {
     let testdata_dir = base_dir.join("testdata");
     let exam_dir = testdata_dir.join("go-exam");
 
-    let exam_config = ExamConfig::new_de().with_base_dir(exam_dir);
+    let exam_config = ExamConfig::default().with_base_dir(exam_dir);
     let exam_tester = ExamTester::new(exam_config, false, false);
 
     // Copying student submissions and tests to the grading directory.

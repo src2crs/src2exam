@@ -62,3 +62,8 @@ fn exam_config_for_custom_struct() {
     assert_eq!(exam_config.base_dir(), expected_base_dir);
     assert_eq!(exam_config.test_timeout(), expected_timeout);
 }
+
+#[test]
+fn default_lang_str_matches_language_default() {
+    assert_eq!(Args::default_lang_str(), Language::default().as_str());
+}

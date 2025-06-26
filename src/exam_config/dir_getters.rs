@@ -34,38 +34,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn new_examconfig_de_default_dir_paths() {
-        let exam_info = ExamConfig::new_de();
-
-        let base_dir = PathBuf::from(".");
-        let submissions_dir = PathBuf::from("./abgaben");
-        let tasks_dir = PathBuf::from("./aufgaben");
-        let grading_dir = PathBuf::from("./bewertung");
-
-        assert_eq!(exam_info.base_dir().to_owned(), base_dir);
-        assert_eq!(exam_info.submissions_dir(), submissions_dir,);
-        assert_eq!(exam_info.tasks_dir(), tasks_dir);
-        assert_eq!(exam_info.grading_dir(), grading_dir);
-    }
-
-    #[test]
-    fn new_examconfig_en_default_dir_paths() {
-        let exam_info = ExamConfig::new_en();
-
-        let base_dir = PathBuf::from(".");
-        let submissions_dir = PathBuf::from("./submissions");
-        let tasks_dir = PathBuf::from("./tasks");
-        let grading_dir = PathBuf::from("./grading");
-
-        assert_eq!(exam_info.base_dir().to_owned(), base_dir);
-        assert_eq!(exam_info.submissions_dir(), submissions_dir,);
-        assert_eq!(exam_info.tasks_dir(), tasks_dir);
-        assert_eq!(exam_info.grading_dir(), grading_dir);
-    }
-
-    #[test]
-    fn new_examconfig_en_custom_dir_paths() {
-        let exam_info = ExamConfig::new_en()
+    fn new_examconfig_custom_dir_paths() {
+        let exam_info = ExamConfig::default()
             .with_base_dir("exam_basedir")
             .with_submissions_subdir("custom_submissions")
             .with_tasks_subdir("custom_tasks")

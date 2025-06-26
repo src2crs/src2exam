@@ -46,7 +46,7 @@ impl Args {
     }
 
     pub fn default_lang_str() -> &'static str {
-        "de"
+        Language::De.as_str()
     }
 
     pub fn default_lang() -> Language {

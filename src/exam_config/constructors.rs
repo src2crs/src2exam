@@ -38,24 +38,6 @@ impl ExamConfig {
         result.test_timeout = timeout;
         result
     }
-
-    /// Creates a new `ExamConfig` instance with german defaults.
-    /// TODO: Move this to the cli module.
-    pub fn new_de() -> Self {
-        Self::default()
-            .with_tasks_subdir("aufgaben")
-            .with_submissions_subdir("abgaben")
-            .with_grading_subdir("bewertung")
-    }
-
-    /// Creates a new `ExamConfig` instance with english defaults.
-    /// TODO: Move this to the cli module.
-    pub fn new_en() -> Self {
-        Self::default()
-            .with_tasks_subdir("tasks")
-            .with_submissions_subdir("submissions")
-            .with_grading_subdir("grading")
-    }
 }
 
 #[cfg(test)]

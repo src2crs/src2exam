@@ -11,7 +11,9 @@ fn exam_dir() -> PathBuf {
 // TODO: Is this an integration test?
 #[test]
 fn student_names_testdata_go_exam() {
-    let exam_config = ExamConfig::new_de().with_base_dir(exam_dir());
+    let exam_config = ExamConfig::default()
+        .with_base_dir(exam_dir())
+        .with_submissions_subdir("abgaben");
     let student_names = exam_config.student_names().unwrap();
 
     assert_eq!(student_names.len(), 3);
@@ -26,7 +28,7 @@ fn student_names_testdata_go_exam() {
 /// TODO: Is this an integration test?
 #[test]
 fn student_names_testdata_go_exam_non_existent_submissions_dir() {
-    let exam_config = ExamConfig::new_en()
+    let exam_config = ExamConfig::default()
         .with_base_dir(exam_dir())
         .with_submissions_subdir("non_existent_dir");
     let student_names = exam_config.student_names();
@@ -37,7 +39,10 @@ fn student_names_testdata_go_exam_non_existent_submissions_dir() {
 // TODO: Is this an integration test?
 #[test]
 fn task_names_testdata_go_exam() {
-    let exam_config = ExamConfig::new_de().with_base_dir(exam_dir());
+    let exam_config = ExamConfig::default()
+        .with_base_dir(exam_dir())
+        .with_tasks_subdir("aufgaben")
+        .with_submissions_subdir("abgaben");
     let task_names = exam_config.task_names().unwrap();
 
     assert_eq!(task_names.len(), 3);
@@ -49,7 +54,7 @@ fn task_names_testdata_go_exam() {
 // Is this an integration test?
 #[test]
 fn task_names_testdata_go_exam_non_existent_tasks_dir() {
-    let exam_config = ExamConfig::new_de()
+    let exam_config = ExamConfig::default()
         .with_base_dir(exam_dir())
         .with_tasks_subdir("non_existent_dir");
     let task_names = exam_config.task_names();
