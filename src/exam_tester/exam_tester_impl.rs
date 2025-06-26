@@ -8,12 +8,14 @@ pub struct ExamTester {
 }
 
 impl ExamTester {
-    pub fn new(exam_info: ExamConfig, verbose: bool, dry_run: bool) -> Self {
-        Self {
-            exam_config: exam_info,
+    pub fn new(exam_config: ExamConfig, verbose: bool, dry_run: bool) -> Self {
+        let result = Self {
+            exam_config,
             verbose,
             dry_run,
-        }
+        };
+        result.print_info();
+        result
     }
 
     /// Copies the submissions into the grading directory.

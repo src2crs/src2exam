@@ -8,7 +8,6 @@ use common::go_exam_dir_str;
 
 fn main() {
     let args = Args::parse_from(["src2exam", "--directory", &go_exam_dir_str()]);
-
     let exam_tester = args.exam_tester().unwrap();
 
     // Copying student submissions and tests to the grading directory.

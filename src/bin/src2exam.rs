@@ -12,8 +12,6 @@ fn main() {
         }
     };
 
-    exam_tester.print_info();
-
     exam_tester.copy_submissions();
     exam_tester.copy_tests();
     exam_tester.run_tests();
