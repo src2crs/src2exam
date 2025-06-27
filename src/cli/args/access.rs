@@ -30,13 +30,17 @@ impl Args {
     /// Returns an exam config from the config file path if that is set
     /// and the file contains a valid configuration.
     pub fn config_from_file(&self) -> Option<ExamConfig> {
-        let path = self.config_path()?;
+        let path = self.config_file_path()?;
         if !path.exists() {
+            eprintln!("Error: Configuration file {:?} does not exist.", path);
             return None;
         }
 
         let file_content = std::fs::read_to_string(&path).ok()?;
-        ExamConfig::from_toml(&file_content).ok()
+        match ExamConfig::from_toml(&file_content) {
+            Ok(config) => Some(config.with_base_dir(self.base_dir())),
+            Err(_) => None,
+        }
     }
 
     /// Writes the exam configuration to config file path
@@ -67,8 +71,14 @@ impl Args {
     /// Returns an exam tester based on the arguments.
     pub fn exam_tester(&self) -> ExamTester {
         let exam_config = match self.config_from_file() {
-            Some(config) => config,
-            None => self.exam_config(),
+            Some(config) => {
+                eprintln!("Using exam configuration from file: {:?}", self.config_path);
+                config
+            }
+            None => {
+                eprintln!("Using exam configuration from parameters.");
+                self.exam_config()
+            }
         };
 
         ExamTester::new(exam_config, self.verbose(), self.dry_run())
@@ -87,5 +97,21 @@ impl Args {
     /// Returns the path to the configuration file, if any.
     pub fn config_path(&self) -> Option<PathBuf> {
         self.config_path.clone()
+    }
+
+    /// Returns the absolute path to the base directory.
+    pub fn working_dir(&self) -> PathBuf {
+        self.base_dir().canonicalize().unwrap_or_else(|_| {
+            eprintln!(
+                "Error: Could not canonicalize base directory {:?}",
+                self.base_dir()
+            );
+            PathBuf::default()
+        })
+    }
+
+    /// Returns the absolute path to the config file, if it is set.
+    pub fn config_file_path(&self) -> Option<PathBuf> {
+        Some(self.working_dir().join(self.config_path.as_ref()?))
     }
 }

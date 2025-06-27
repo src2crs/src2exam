@@ -2,6 +2,15 @@ use crate::ExamConfig;
 use clap::Parser;
 use std::path::PathBuf;
 
+// TODO: Don't export the base_directory to files.
+// TODO: Is it cleaner to distinguish between configs that are read from files,
+//       configs that are created from CLI arguments,
+//       and the config that is actually used by the exam tester?
+//       Or maybe the base directory should be a property of the exam tester,
+//       instead of the config? Use a trait to describe the config and parameterize
+//       the exam tester over it?
+// TODO: Decide what role the CLI args play in this context.
+
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 pub struct Args {

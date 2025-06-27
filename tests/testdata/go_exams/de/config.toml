@@ -1,0 +1,8 @@
+base_dir = "."
+tasks_dirname = "aufgaben"
+submissions_dirname = "abgaben"
+grading_dirname = "bewertung"
+
+[test_timeout]
+secs = 15
+nanos = 0
