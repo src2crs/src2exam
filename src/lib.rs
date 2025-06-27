@@ -1,3 +1,6 @@
+pub mod config;
+
+// TODO: Decide what has to be moved into the `config` module.
 pub mod cli;
 pub mod exam_config;
 pub mod exam_tester;
