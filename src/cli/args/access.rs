@@ -39,7 +39,13 @@ impl Args {
         let file_content = std::fs::read_to_string(&path).ok()?;
         match ExamConfig::from_toml(&file_content) {
             Ok(config) => Some(config.with_base_dir(self.base_dir())),
-            Err(_) => None,
+            Err(e) => {
+                eprintln!(
+                    "Error: Failed to parse configuration file {:?}: {}",
+                    path, e
+                );
+                None
+            }
         }
     }
 

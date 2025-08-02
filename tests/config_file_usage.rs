@@ -2,7 +2,7 @@ pub mod common;
 use common::TestCases::{GoExamDe, GoExamEn};
 
 use clap::Parser;
-use src2exam::cli::Args;
+use src2exam::{cli::Args, exam_config::CodeLang};
 
 #[test]
 fn go_exam_en_dirs() {
@@ -25,6 +25,7 @@ fn go_exam_en_dirs() {
     assert_eq!(exam_config.base_dir(), exam_dir);
     assert_eq!(exam_config.tasks_dir(), exam_dir.join("tasks"));
     assert_eq!(exam_config.grading_dir(), exam_dir.join("grading"));
+    assert_eq!(exam_config.coding_language(), CodeLang::Go);
     assert_eq!(exam_config.submissions_dir(), exam_dir.join("submissions"));
     assert_eq!(
         exam_config.test_timeout(),
@@ -55,6 +56,7 @@ fn go_exam_de_dirs() {
     assert_eq!(exam_config.base_dir(), exam_dir);
     assert_eq!(exam_config.tasks_dir(), exam_dir.join("aufgaben"));
     assert_eq!(exam_config.grading_dir(), exam_dir.join("bewertung"));
+    assert_eq!(exam_config.coding_language(), CodeLang::Go);
     assert_eq!(exam_config.submissions_dir(), exam_dir.join("abgaben"));
     assert_eq!(
         exam_config.test_timeout(),

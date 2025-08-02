@@ -2,19 +2,23 @@ use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::time::Duration;
 
+mod code_lang;
+mod constructors;
+mod conversions;
+mod defaults;
+mod dir_getters;
+
+pub use code_lang::CodeLang;
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ExamConfig {
     base_dir: PathBuf,
     tasks_dirname: String,
     submissions_dirname: String,
     grading_dirname: String,
+    code_language: CodeLang,
     test_timeout: Duration,
 }
-
-mod constructors;
-mod conversions;
-mod defaults;
-mod dir_getters;
 
 impl ExamConfig {
     /// Returns the student names for the exam.
@@ -84,6 +88,7 @@ impl Default for ExamConfig {
             submissions_dirname: Self::default_submissions_dirname(),
             grading_dirname: Self::default_grading_dirname(),
             test_timeout: Self::default_timeout(),
+            code_language: Self::default_code_language(),
         }
     }
 }

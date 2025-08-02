@@ -26,6 +26,9 @@ pub struct Args {
     /// The name of the subdirectory to be used for grading.
     #[arg(long, default_value = ExamConfig::default_grading_dirname())]
     grading_dirname: String,
+    /// The programming language used in the exam.
+    #[arg(long, default_value = ExamConfig::default_code_language_string())]
+    code_language: String,
     /// The timeout for running the tests in seconds.
     #[arg(short, long, default_value = ExamConfig::default_timeout_secs().to_string(), value_parser = clap::value_parser!(u64).range(1..))]
     timeout: u64,

@@ -27,6 +27,11 @@ impl ExamConfig {
     pub fn grading_dir(&self) -> PathBuf {
         self.base_dir.join(&self.grading_dirname)
     }
+
+    /// Returns the coding langiage to be used.
+    pub fn coding_language(&self) -> CodeLang {
+        self.code_language.clone()
+    }
 }
 
 #[cfg(test)]

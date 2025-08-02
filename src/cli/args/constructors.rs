@@ -7,11 +7,12 @@ use std::path::PathBuf;
 /// Constructors
 impl Args {
     /// Creates a new Args instance from the given values.
-    pub fn new<B, T, S, G, U, C>(
+    pub fn new<B, T, S, G, U, CL, C>(
         base_directory: B,
         tasks_dirname: T,
         submissions_dirname: S,
         grading_dirname: G,
+        code_language: CL,
         timeout: U,
         verbose: bool,
         dry_run: bool,
@@ -23,6 +24,7 @@ impl Args {
         T: Into<String>,
         S: Into<String>,
         G: Into<String>,
+        CL: Into<String>,
         U: Into<u64>,
         C: Into<Option<PathBuf>>,
     {
@@ -31,6 +33,7 @@ impl Args {
             tasks_dirname: tasks_dirname.into(),
             submissions_dirname: submissions_dirname.into(),
             grading_dirname: grading_dirname.into(),
+            code_language: code_language.into(),
             timeout: timeout.into(),
             verbose,
             config_path: config_path.into(),
@@ -47,6 +50,7 @@ impl Default for Args {
             ExamConfig::default_tasks_dirname(),
             ExamConfig::default_submissions_dirname(),
             ExamConfig::default_grading_dirname(),
+            ExamConfig::default_code_language_string(),
             ExamConfig::default_timeout_secs(),
             false,
             false,

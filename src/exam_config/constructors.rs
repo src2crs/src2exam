@@ -32,6 +32,15 @@ impl ExamConfig {
         result
     }
 
+    /// Creates an `ExamConfig` instance from self with the given coding language.
+    pub fn with_coding_language<S: Into<String>>(self, coding_lang: S) -> Self {
+        let mut result = self;
+        // TODO: Improve error handling.
+        result.code_language =
+            CodeLang::try_from(coding_lang.into()).expect("invalid coding language");
+        result
+    }
+
     /// Creates a new `ExamConfig` instance from self with the given test timeout.
     pub fn with_test_timeout(self, timeout: Duration) -> Self {
         let mut result = self;

@@ -2,6 +2,7 @@ base_dir = "."
 tasks_dirname = "tasks"
 submissions_dirname = "submissions"
 grading_dirname = "grading"
+code_language = "go"
 
 [test_timeout]
 secs = 15

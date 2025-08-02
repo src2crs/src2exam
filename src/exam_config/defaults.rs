@@ -1,3 +1,5 @@
+use crate::exam_config::code_lang::CodeLang;
+
 use super::ExamConfig;
 use std::path::PathBuf;
 
@@ -25,6 +27,15 @@ impl ExamConfig {
     /// Returns the default grading directory name.
     pub fn default_grading_dirname() -> String {
         "grading".to_string()
+    }
+
+    /// Returns the default code language.
+    pub fn default_code_language() -> CodeLang {
+        CodeLang::default()
+    }
+
+    pub fn default_code_language_string() -> String {
+        Self::default_code_language().to_string()
     }
 
     /// Returns the default test timeout for the exam as a number of seconds.
