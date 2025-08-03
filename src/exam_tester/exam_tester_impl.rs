@@ -78,7 +78,6 @@ impl ExamTester {
     /// A short summary of the result is appended to the corresponding source file.
     /// The filename is assumed to be the task name with the `.go` extension.
     pub fn run_tests(&self) {
-        let grading_dir = self.exam_config.grading_dir();
         let student_names = self.exam_config.student_names().unwrap();
         let task_names = self.exam_config.task_names().unwrap();
 
@@ -86,21 +85,12 @@ impl ExamTester {
             println!("Running tests for student: {}", student_name);
             for task_name in &task_names {
                 print!("  {}: ", task_name);
-                let student_task_dir = grading_dir.join(student_name).join(task_name);
 
                 if self.dry_run() {
                     print!("(dry run)");
                 } else {
-                    let runner = GoRunner::new(&student_task_dir, self.exam_config.test_timeout());
-                    let test_result = runner.run_tests();
-
-                    let result_message = test_result.to_string_de();
-                    let grading_message = format!("// BEWERTUNG: \n// TESTS: {}", result_message);
-
-                    // Print result message and append result to source file.
-                    print!("{}", result_message);
-                    let source_file = student_task_dir.join(format!("{}.go", task_name));
-                    crate::filesystem::append_to_file(&source_file, &grading_message);
+                    // TODO: Create and use a C++ runner here if the language is C++.
+                    self.run_go_tests(&student_name, task_name);
                 }
                 println!();
             }
@@ -133,5 +123,29 @@ impl ExamTester {
         if self.dry_run() {
             println!("Dry run mode enabled.");
         }
+    }
+}
+
+/// Programming language specific test runner implementations.
+/// TODO: Generalize?
+/// - Introduce a trait for this and generalize the logic?
+/// - Maybe first implement a generalized source reader/writer and/or a document model?
+impl ExamTester {
+    fn run_go_tests(&self, student_name: &str, task_name: &str) {
+        let student_task_dir = self
+            .exam_config
+            .grading_dir()
+            .join(student_name)
+            .join(task_name);
+        let runner = GoRunner::new(&student_task_dir, self.exam_config.test_timeout());
+        let test_result = runner.run_tests();
+
+        let result_message = test_result.to_string_de();
+        let grading_message = format!("// BEWERTUNG: \n// TESTS: {}", result_message);
+
+        // Print result message and append result to source file.
+        print!("{}", result_message);
+        let source_file = student_task_dir.join(format!("{}.go", task_name));
+        crate::filesystem::append_to_file(&source_file, &grading_message);
     }
 }
