@@ -92,3 +92,69 @@ impl Default for ExamConfig {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn default_exam_config() {
+        let exam_config = ExamConfig::default();
+        assert_eq!(exam_config.base_dir, PathBuf::from("."));
+        assert_eq!(exam_config.tasks_dirname, "tasks");
+        assert_eq!(exam_config.submissions_dirname, "submissions");
+        assert_eq!(exam_config.grading_dirname, "grading");
+        assert_eq!(exam_config.test_timeout, Duration::from_secs(30));
+        assert_eq!(exam_config.code_language, CodeLang::default());
+    }
+
+    #[test]
+    fn exam_config_serialization() {
+        let exam_config = ExamConfig::default()
+            .with_base_dir("basedir")
+            .with_tasks_subdir("tasksdir")
+            .with_submissions_subdir("submissionsdir")
+            .with_grading_subdir("gradingdir")
+            .with_coding_language("Go")
+            .with_test_timeout(Duration::from_secs(15));
+        let serialized = toml::to_string(&exam_config).unwrap();
+
+        let expected_toml = [
+            r#"base_dir = "basedir""#,
+            r#"tasks_dirname = "tasksdir""#,
+            r#"submissions_dirname = "submissionsdir""#,
+            r#"grading_dirname = "gradingdir""#,
+            r#"code_language = "Go""#,
+            r#""#,
+            r#"[test_timeout]"#,
+            r#"secs = 15"#,
+            r#"nanos = 0"#,
+        ]
+        .join("\n");
+        assert_eq!(serialized.trim(), expected_toml.trim());
+    }
+
+    #[test]
+    fn exam_config_deserialization() {
+        let toml_str = [
+            r#"base_dir = "basedir""#,
+            r#"tasks_dirname = "tasksdir""#,
+            r#"submissions_dirname = "submissionsdir""#,
+            r#"grading_dirname = "gradingdir""#,
+            r#"code_language = "Go""#,
+            r#""#,
+            r#"[test_timeout]"#,
+            r#"secs = 15"#,
+            r#"nanos = 0"#,
+        ]
+        .join("\n");
+
+        let exam_config: ExamConfig = toml::from_str(&toml_str).unwrap();
+        assert_eq!(exam_config.base_dir, PathBuf::from("basedir"));
+        assert_eq!(exam_config.tasks_dirname, "tasksdir");
+        assert_eq!(exam_config.submissions_dirname, "submissionsdir");
+        assert_eq!(exam_config.grading_dirname, "gradingdir");
+        assert_eq!(exam_config.code_language, CodeLang::Go);
+        assert_eq!(exam_config.test_timeout, Duration::from_secs(15));
+    }
+}
